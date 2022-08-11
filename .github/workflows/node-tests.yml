@@ -29,6 +29,7 @@ jobs:
         if: steps.has-node-assets.outputs.exists == 'true'
         uses: actions/setup-node@v1
         with:
+          cache: 'npm'
           node-version: ${{ inputs.node }}
       - name: Install node dependencies (npm ci)
         if: steps.has-node-assets.outputs.exists == 'true'

@@ -3,6 +3,14 @@ name: PHPUnit Testing Suite
 on:
   workflow_call:
     inputs:
+      action:
+        default: "install"
+        required: false
+        type: "string"
+      command:
+        default: "phpunit"
+        required: false
+        type: "string"
       php:
         default: 8.0
         required: false
@@ -77,11 +85,20 @@ jobs:
 
       - name: Install dependencies
         uses: nick-invision/retry@v2.7.0
+        if: inputs.action == 'install'
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer install --${{ inputs.stability }} --prefer-dist --no-interaction
+          command: composer install --prefer-dist --no-interaction
+
+      - name: Update dependencies
+        uses: nick-invision/retry@v2.7.0
+        if: inputs.action == 'update'
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --${{ inputs.stability }} --prefer-dist --no-interaction
 
       - name: Test Package
         shell: bash
-        run: composer run phpunit
+        run: composer run ${{ inputs.command }}

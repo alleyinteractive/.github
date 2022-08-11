@@ -116,26 +116,6 @@ npm run test
 npm run build
 ```
 
-
-#### Usage
-
-```yml
-name: Create a -built branch
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  built-branch:
-    uses: alleyinteractive/.github/.github/workflows/built-branch.yml@HEAD
-```
-
-### Built Tag
-
-Create a `*-built` version of a tag for use in submodules.
-
 #### Inputs
 
 > Specify using `with` keyword.

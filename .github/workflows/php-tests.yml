@@ -31,7 +31,7 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    name: PHP Unit Tests ${{ inputs.php }} - ${{ inputs.stability }} - ${{ inputs.os }}
+    name: phpunit ${{ inputs.php }} - ${{ inputs.stability }} - ${{ inputs.os }}
     env:
       CACHEDIR: /tmp/test-cache
       WP_CORE_DIR: /tmp/wordpress

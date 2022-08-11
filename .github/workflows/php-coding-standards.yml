@@ -1,4 +1,4 @@
-name: Coding Standards
+name: PHP Coding Standards
 
 on:
   workflow_call:
@@ -11,7 +11,7 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    name: PHP Coding Standards ${{ inputs.php }}
+    name: phpcs ${{ inputs.php }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

@@ -31,11 +31,6 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-      redis:
-        image: redis:5.0
-        ports:
-          - 6379:6379
-        options: --entrypoint redis-server
     name: PHP Unit Tests ${{ inputs.php }} - ${{ inputs.stability }} - ${{ inputs.os }}
     env:
       CACHEDIR: /tmp/test-cache

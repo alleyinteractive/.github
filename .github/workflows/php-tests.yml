@@ -1,0 +1,92 @@
+name: PHPUnit Testing Suite
+
+on:
+  workflow_call:
+    inputs:
+      php:
+        default: 8.0
+        required: false
+        type: number
+      os:
+        default: "ubuntu-latest"
+        required: false
+        type: string
+      stability:
+        default: "prefer-stable"
+        required: false
+        type: string
+      wordpress:
+        default: "latest"
+        required: false
+        type: "string"
+
+jobs:
+  test:
+    runs-on: ${{ inputs.os }}
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      redis:
+        image: redis:5.0
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+    name: PHP Unit Tests ${{ inputs.php }} - ${{ inputs.stability }} - ${{ inputs.os }}
+    env:
+      CACHEDIR: /tmp/test-cache
+      WP_CORE_DIR: /tmp/wordpress
+      WP_VERSION: ${{ inputs.php }}
+      WP_DB_HOST: 127.0.0.1
+      WP_DB_USER: root
+      WP_DB_PASSWORD: '""'
+
+    steps:
+      - name: Cancel previous runs of this workflow (pull requests only)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: styfle/cancel-workflow-action@0.10.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Set up Composer caching
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-composer-dependencies
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{ inputs.stability }}-composer-${{ hashFiles('**/composer.lock') }}--
+          restore-keys: |
+            ${{ runner.os }}-${{ inputs.stability }}-composer-
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php }}
+          extensions: apc, dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd
+          tools: composer:v2
+          coverage: none
+
+      - name: Validate Composer
+        run: composer validate --strict
+
+      - name: Install dependencies
+        uses: nick-invision/retry@v2.7.0
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer install --${{ inputs.stability }} --prefer-dist --no-interaction
+
+      - name: Test Package
+        shell: bash
+        run: composer run phpunit

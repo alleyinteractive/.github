@@ -31,7 +31,7 @@ Create a `*-built` version of a branch for use in submodules.
 ##### `node`
 
 - Specify the Node version to use.
-- Will not built front-end assets if none are found.
+- Will not build front-end assets if none are found.
 - Accepts a number.
 - Defaults to `16`.
 
@@ -67,7 +67,7 @@ Create a `*-built` version of a tag for use in submodules.
 ##### `node`
 
 - Specify the Node version to use.
-- Will not built front-end assets if none are found.
+- Will not build front-end assets if none are found.
 - Accepts a number.
 - Defaults to `16`.
 
@@ -218,6 +218,12 @@ tests.
 - Specify the WordPress version to use.
 - Accepts a string.
 - Defaults to `latest`.
+
+#### `dependency-versions`
+
+- Allows you to select whether the job should install the locked, highest, or lowest versions of Composer dependencies.
+- Valid values are `locked`, `highest`, or `lowest`.
+- Defaults to `locked`.
 
 #### Usage
 

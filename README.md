@@ -127,6 +127,13 @@ npm run build
 - Accepts a number.
 - Defaults to `16`.
 
+##### `cache`
+
+- Specify the cache to use or otherwise disable.
+- Will not cache if a `package-lock.json` is not found.
+- Accepts a boolean.
+- Defaults to `true`.
+
 #### Usage
 
 ```yml

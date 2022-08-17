@@ -94,7 +94,8 @@ Sets Dependabot pull requests to auto merge once they meet the requirements for 
 
 ```yml
 name: dependabot-auto-merge
-on: pull_request_target
+on:
+  pull_request_target:
 
 permissions:
   pull-requests: write

@@ -28,11 +28,18 @@ jobs:
         run: |
           [[ -f package.json ]] && echo "::set-output name=exists::true" || echo "::set-output name=exists::false"
 
+      - name: Check if the plugin has a package-lock file
+        shell: bash
+        id: has-package-lock
+        if: steps.has-node-assets.outputs.exists == 'true'
+        run: |
+          [[ -f package-lock.json ]] && echo "::set-output name=exists::true" || echo "::set-output name=exists::false"
+
       - name: Setup Node
         if: steps.has-node-assets.outputs.exists == 'true'
         uses: actions/setup-node@v3
         with:
-          cache: 'npm'
+          cache: ${{ steps.has-package-lock.outputs.exists && 'npm' || false }}
           node-version: ${{ inputs.node }}
 
       - name: Install node dependencies (npm ci)

@@ -47,7 +47,7 @@ on:
 
 jobs:
   built-branch:
-    uses: alleyinteractive/.github/.github/workflows/built-branch.yml@HEAD
+    uses: alleyinteractive/.github/.github/workflows/built-branch.yml@main
 ```
 
 ### Built Tag
@@ -83,7 +83,7 @@ on:
 
 jobs:
   built-tag:
-    uses: alleyinteractive/.github/.github/workflows/built-tag.yml@HEAD
+    uses: alleyinteractive/.github/.github/workflows/built-tag.yml@main
 ```
 
 ### Dependabot Auto Merge
@@ -144,7 +144,7 @@ on:
 
 jobs:
   node-tests:
-    uses: alleyinteractive/.github/.github/workflows/node-tests.yml@HEAD
+    uses: alleyinteractive/.github/.github/workflows/node-tests.yml@main
 ```
 
 ### PHP Coding Standards
@@ -183,7 +183,7 @@ on:
 
 jobs:
   coding-standards:
-    uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@HEAD
+    uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
 ```
 
 ### PHP Tests
@@ -247,5 +247,5 @@ on:
 
 jobs:
   coding-standards:
-    uses: alleyinteractive/.github/.github/workflows/php-tests.yml@HEAD
+    uses: alleyinteractive/.github/.github/workflows/php-tests.yml@main
 ```

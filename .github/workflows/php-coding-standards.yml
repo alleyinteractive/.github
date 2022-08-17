@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Get Composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -28,6 +29,7 @@ jobs:
           key: ${{ inputs.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ inputs.php }}-composer-
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -37,11 +39,13 @@ jobs:
           coverage: none
       - name: Validate Composer
         run: composer validate --strict
+
       - name: Install dependencies
         uses: nick-invision/retry@v2.7.0
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer install
+
       - name: Run phpcs
         run: composer run phpcs

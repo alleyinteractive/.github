@@ -18,28 +18,34 @@ jobs:
         uses: styfle/cancel-workflow-action@0.5.0
         with:
           access_token: ${{ github.token }}
+
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
       - name: Check if the plugin has front-end assets
         shell: bash
         id: has-node-assets
         run: |
           [[ -f package.json ]] && echo "::set-output name=exists::true" || echo "::set-output name=exists::false"
+
       - name: Setup Node
         if: steps.has-node-assets.outputs.exists == 'true'
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           cache: 'npm'
           node-version: ${{ inputs.node }}
       - name: Install node dependencies (npm ci)
         if: steps.has-node-assets.outputs.exists == 'true'
         run: npm install
+
       - name: Run npm test
         if: steps.has-node-assets.outputs.exists == 'true'
         run: npm run test
+
       - name: Run npm lint
         if: steps.has-node-assets.outputs.exists == 'true'
         run: npm run lint
+
       - name: Run npm build
         if: steps.has-node-assets.outputs.exists == 'true'
         run: npm run build

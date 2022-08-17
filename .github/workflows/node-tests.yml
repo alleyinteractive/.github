@@ -7,6 +7,10 @@ on:
         default: 16
         required: false
         type: number
+      cache:
+        default: "npm"
+        required: false
+        type: "string"
 
 jobs:
   npm-ci:
@@ -40,7 +44,7 @@ jobs:
         if: steps.has-node-assets.outputs.exists == 'true'
         uses: actions/setup-node@v3
         with:
-          # cache: ${{ steps.has-package-lock.outputs.exists && 'npm' || '' }}
+          cache: ${{ steps.has-package-lock.outputs.exist == 'true' && inputs.cache || false }}
           node-version: ${{ inputs.node }}
 
       - name: Install node dependencies (npm ci)

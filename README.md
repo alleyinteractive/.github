@@ -241,6 +241,4 @@ on:
 jobs:
   coding-standards:
     uses: alleyinteractive/.github/.github/workflows/php-tests.yml@HEAD
-    with:
-      action: "update"
 ```

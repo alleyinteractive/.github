@@ -33,7 +33,6 @@ jobs:
         with:
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
-          php-version: ${{ inputs.php }}
 
       - name: Validate Composer
         run: composer validate --strict

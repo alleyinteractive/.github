@@ -76,7 +76,7 @@ jobs:
           dependency-versions: ${{ inputs.dependency-versions }}
 
       - name: Update dependencies
-        uses: nick-invision/retry@v2.7.0
+        uses: nick-invision/retry@v2.8.1
         if: inputs.action == 'update'
         with:
           timeout_minutes: 5

@@ -44,7 +44,7 @@ jobs:
         if: steps.has-node-assets.outputs.exists == 'true'
         uses: actions/setup-node@v3
         with:
-          cache: ${{ inputs.cache && steps.has-package-lock.outputs.exist == 'true' && inputs.cache || false }}
+          cache: ${{ inputs.cache && steps.has-package-lock.outputs.exist == 'true' && inputs.cache || '' }}
           node-version: ${{ inputs.node }}
 
       - name: Install node dependencies (npm ci)

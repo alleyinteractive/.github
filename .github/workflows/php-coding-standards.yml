@@ -7,6 +7,10 @@ on:
         default: 8.0
         required: false
         type: number
+      dependency-versions:
+        default: "locked"
+        required: false
+        type: "string"
 
 jobs:
   tests:
@@ -16,20 +20,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Set up Composer caching
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-composer-dependencies
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ inputs.php }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ inputs.php }}-composer-
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -37,15 +27,16 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd
           tools: composer:v2
           coverage: none
-      - name: Validate Composer
-        run: composer validate --strict
 
       - name: Install dependencies
-        uses: nick-invision/retry@v2.7.0
+        uses: ramsey/composer-install@v1
         with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer install
+          composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
+          dependency-versions: ${{ inputs.dependency-versions }}
+          php-version: ${{ inputs.php }}
+
+      - name: Validate Composer
+        run: composer validate --strict
 
       - name: Run phpcs
         run: composer run phpcs

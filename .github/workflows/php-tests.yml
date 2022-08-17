@@ -19,10 +19,10 @@ on:
         default: "ubuntu-latest"
         required: false
         type: string
-      stability:
-        default: "prefer-stable"
+      dependency-versions:
+        default: "locked"
         required: false
-        type: string
+        type: "string"
       wordpress:
         default: "latest"
         required: false
@@ -58,20 +58,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Set up Composer caching
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-composer-dependencies
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ inputs.stability }}-composer-${{ hashFiles('**/composer.lock') }}--
-          restore-keys: |
-            ${{ runner.os }}-${{ inputs.stability }}-composer-
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -84,12 +70,11 @@ jobs:
         run: composer validate --strict
 
       - name: Install dependencies
-        uses: nick-invision/retry@v2.7.0
-        if: inputs.action == 'install'
+        uses: ramsey/composer-install@v1
         with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer install --prefer-dist --no-interaction
+          composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
+          dependency-versions: ${{ inputs.dependency-versions }}
+          php-version: ${{ inputs.php }}
 
       - name: Update dependencies
         uses: nick-invision/retry@v2.7.0

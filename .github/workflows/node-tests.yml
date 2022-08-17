@@ -34,12 +34,13 @@ jobs:
         if: steps.has-node-assets.outputs.exists == 'true'
         run: |
           [[ -f package-lock.json ]] && echo "::set-output name=exists::true" || echo "::set-output name=exists::false"
+          ls -al
 
       - name: Setup Node
         if: steps.has-node-assets.outputs.exists == 'true'
         uses: actions/setup-node@v3
         with:
-          cache: ${{ steps.has-package-lock.outputs.exists && 'npm' || false }}
+          cache: ${{ steps.has-package-lock.outputs.exists && 'npm' || '' }}
           node-version: ${{ inputs.node }}
 
       - name: Install node dependencies (npm ci)

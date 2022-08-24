@@ -143,6 +143,24 @@ npm run build
 - Accepts a boolean.
 - Defaults to `true`.
 
+##### `run-test`
+
+- Specify if `npm run test` should be run.
+- Accepts a boolean.
+- Defaults to `true`.
+
+##### `run-lint`
+
+- Specify if `npm run lint` should be run.
+- Accepts a boolean.
+- Defaults to `true`.
+
+##### `run-build`
+
+- Specify if `npm run build` should be run.
+- Accepts a boolean.
+- Defaults to `true`.
+
 #### Usage
 
 ```yml

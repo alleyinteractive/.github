@@ -14,6 +14,13 @@ repository.
 
 The following workflows are available to use:
 
+- [Built Branch](#built-branch)
+- [Built Tag](#built-tag)
+- [Dependabot Auto Merge](#dependabot-auto-merge)
+- [Node Tests](#node-tests)
+- [PHP Coding Standards](#php-coding-standards)
+- [PHP Tests](#php-tests)
+
 ### Built Branch
 
 Create a `*-built` version of a branch for use in submodules.
@@ -78,8 +85,9 @@ name: Create a -built tag
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
+      - '!*-built'
 
 jobs:
   built-tag:

@@ -13,15 +13,15 @@ on:
         type: boolean
       run-test:
         default: true
-        required: true
+        required: false
         type: boolean
       run-lint:
         default: true
-        required: true
+        required: false
         type: boolean
       run-build:
         default: true
-        required: true
+        required: false
         type: boolean
 
 jobs:

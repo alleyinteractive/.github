@@ -143,6 +143,24 @@ npm run build
 - Accepts a boolean.
 - Defaults to `true`.
 
+##### `run-test`
+
+- Specify if `npm run test` should be run.
+- Accepts a boolean.
+- Defaults to `true`.
+
+##### `run-lint`
+
+- Specify if `npm run lint` should be run.
+- Accepts a boolean.
+- Defaults to `true`.
+
+##### `run-build`
+
+- Specify if `npm run build` should be run.
+- Accepts a boolean.
+- Defaults to `true`.
+
 #### Usage
 
 ```yml
@@ -255,6 +273,32 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  coding-standards:
+  php-tests:
     uses: alleyinteractive/.github/.github/workflows/php-tests.yml@main
+```
+
+You can also use the PHP tests inside a Github Action Matrix to test against
+multiple PHP/WordPress versions:
+
+```yml
+name: Testing Suite
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  php-tests:
+    strategy:
+      matrix:
+        php: [7.4, 8.0]
+        wordpress: ["latest"]
+    uses: alleyinteractive/.github/.github/workflows/php-tests.yml@main
+    with:
+      php: ${{ matrix.php }}
+      wordpress: ${{ matrix.wordpress }}
 ```

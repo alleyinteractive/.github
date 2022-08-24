@@ -11,6 +11,18 @@ on:
         default: true
         required: false
         type: boolean
+      run-test:
+        default: true
+        required: false
+        type: boolean
+      run-lint:
+        default: true
+        required: false
+        type: boolean
+      run-build:
+        default: true
+        required: false
+        type: boolean
 
 jobs:
   npm-ci:
@@ -52,13 +64,13 @@ jobs:
         run: npm install
 
       - name: Run npm test
-        if: steps.has-node-assets.outputs.exists == 'true'
+        if: steps.has-node-assets.outputs.exists == 'true' && inputs.run-test
         run: npm run test
 
       - name: Run npm lint
-        if: steps.has-node-assets.outputs.exists == 'true'
+        if: steps.has-node-assets.outputs.exists == 'true' && inputs.run-lint
         run: npm run lint
 
       - name: Run npm build
-        if: steps.has-node-assets.outputs.exists == 'true'
+        if: steps.has-node-assets.outputs.exists == 'true' && inputs.run-build
         run: npm run build

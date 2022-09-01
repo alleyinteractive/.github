@@ -27,6 +27,10 @@ on:
         default: "latest"
         required: false
         type: "string"
+      multisite:
+        default: false
+        required: false
+        type: boolean
 
 jobs:
   test:
@@ -47,6 +51,7 @@ jobs:
       WP_DB_HOST: 127.0.0.1
       WP_DB_USER: root
       WP_DB_PASSWORD: '""'
+      WP_MULTISITE: ${{ inputs.multisite == true }}
 
     steps:
       - name: Cancel previous runs of this workflow (pull requests only)

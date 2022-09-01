@@ -253,6 +253,12 @@ tests.
 - Accepts a string.
 - Defaults to `latest`.
 
+##### `multisite`
+
+- Flag if WordPress should be installed with multisite. Sets the `WP_MULTISITE` flag.
+- Accepts a boolean.
+- Defaults to `false`.
+
 #### `dependency-versions`
 
 - Allows you to select whether the job should install the locked, highest, or lowest versions of Composer dependencies.

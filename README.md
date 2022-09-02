@@ -111,7 +111,7 @@ permissions:
 
 jobs:
   dependabot:
-    uses: alleyinteractive/.github/.github/workflows/dependabot-auto-merge.yml@workflows
+    uses: alleyinteractive/.github/.github/workflows/dependabot-auto-merge.yml@main
 ```
 
 ### Node Tests

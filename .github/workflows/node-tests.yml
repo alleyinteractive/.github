@@ -65,11 +65,11 @@ jobs:
 
       - name: Install node dependencies (npm install)
         if: steps.has-node-assets.outputs.exists == 'true' && ! inputs.run-test
-        run: npm ci
+        run: npm install
 
       - name: Install node dependencies (npm ci)
         if: steps.has-node-assets.outputs.exists == 'true' && inputs.ci
-        run: npm install
+        run: npm ci
 
       - name: Run npm test
         if: steps.has-node-assets.outputs.exists == 'true' && inputs.run-test

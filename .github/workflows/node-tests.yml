@@ -64,7 +64,7 @@ jobs:
           node-version: ${{ inputs.node }}
 
       - name: Install node dependencies (npm install)
-        if: steps.has-node-assets.outputs.exists == 'true' && ! inputs.run-test
+        if: steps.has-node-assets.outputs.exists == 'true' && ! inputs.ci
         run: npm install
 
       - name: Install node dependencies (npm ci)

@@ -7,6 +7,10 @@ on:
         default: 16
         required: false
         type: number
+      ci:
+        default: false
+        required: false
+        type: boolean
       cache:
         default: true
         required: false
@@ -59,8 +63,12 @@ jobs:
           cache: ${{ inputs.cache && steps.has-package-lock.outputs.exist == 'true' && inputs.cache || '' }}
           node-version: ${{ inputs.node }}
 
+      - name: Install node dependencies (npm install)
+        if: steps.has-node-assets.outputs.exists == 'true' && ! inputs.run-test
+        run: npm ci
+
       - name: Install node dependencies (npm ci)
-        if: steps.has-node-assets.outputs.exists == 'true'
+        if: steps.has-node-assets.outputs.exists == 'true' && inputs.ci
         run: npm install
 
       - name: Run npm test

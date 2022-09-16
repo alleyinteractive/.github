@@ -136,6 +136,12 @@ npm run build
 - Accepts a number.
 - Defaults to `16`.
 
+##### `ci`
+
+- Specify if `npm ci` should be used versus `npm install`.
+- Accepts a boolean.
+- Defaults to `false`.
+
 ##### `cache`
 
 - Specify the cache to use or otherwise disable.

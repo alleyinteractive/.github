@@ -6,11 +6,16 @@ for the [`alleyinteractive`](https://github.com/alleyinteractive) organization.
 
 ## Usage
 
-The repository contains reusable Github workflows for use on any public
-repository.
+This repository acts as a catch-all for Github organization-wide community
+files, such as [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md). These community
+health files will be used unless a repository has their own version.
+
+The repository also contains reusable Github workflows for use on any public
+repository. These workflows are reused across the organization to perform
+continuous integration tests with Github Actions.
 
 
-## Workflows
+## Reusable Workflows
 
 The following workflows are available to use:
 

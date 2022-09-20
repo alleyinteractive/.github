@@ -1,4 +1,4 @@
-# Contributing
+# Contributing <!-- omit in toc -->
 
 Thank you for taking the time to contribute to our open-source projects!
 Contributions are welcome and you will be fully credited.
@@ -6,21 +6,20 @@ Contributions are welcome and you will be fully credited.
 Please take the time to read and understand the contribution guide before
 creating an issue or pull request.
 
-- [Contributing](#contributing)
-  - [Code of Conduct](#code-of-conduct)
-  - [Contribution Guidelines](#contribution-guidelines)
-    - [Reporting Issues/Bugs](#reporting-issuesbugs)
-  - [Maintainership](#maintainership)
-  - [Best Practices](#best-practices)
-    - [Branch Names](#branch-names)
-    - [Coding Style](#coding-style)
-      - [WordPress Coding Standard](#wordpress-coding-standard)
-      - [Tests](#tests)
-      - [Backward Compatibility](#backward-compatibility)
-      - [Documentation](#documentation)
-      - [Compiled Assets](#compiled-assets)
-    - [Release Process](#release-process)
-      - [Releases to WordPress.org](#releases-to-wordpressorg)
+- [Code of Conduct](#code-of-conduct)
+- [Contribution Guidelines](#contribution-guidelines)
+  - [Reporting Issues/Bugs](#reporting-issuesbugs)
+- [Maintainership](#maintainership)
+- [Best Practices](#best-practices)
+  - [Branch Names](#branch-names)
+  - [Coding Style](#coding-style)
+    - [WordPress Coding Standard](#wordpress-coding-standard)
+    - [Tests](#tests)
+    - [Backward Compatibility](#backward-compatibility)
+    - [Documentation](#documentation)
+    - [Compiled Assets](#compiled-assets)
+  - [Release Process](#release-process)
+    - [Releases to WordPress.org](#releases-to-wordpressorg)
 
 ## Code of Conduct
 

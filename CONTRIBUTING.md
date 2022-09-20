@@ -82,8 +82,8 @@ listed here.
 
 Code must generally follow the [WordPress Coding
 Standard](wordpress-coding-standard). Our projects follow the standards via a
-[PHPCS ruleset](phpcs-ruleset) with some modifications from core to allow for
-some flexibility.
+[PHPCS ruleset](phpcs-ruleset) with some modifications from the core standards
+to allow for some added flexibility.
 
 #### Tests
 
@@ -121,13 +121,14 @@ The following is a release process for all projects. All projects must follow
 1. Starting from the default branch of the repository, create a release branch
    for your changes (`release/1.0.0` for example).
 2. Update the `CHANGELOG` with the release's changes. Bump the version
-   referenced in the project to the new version, including in the `readme.txt`,
-   the main plugin file, etc.
-3. Create a pull request for your new release version.
-4. Once approved, merge the pull request and create a new [release](releases)
-   for the project. The tag name and release name should be the version name
-   prefixed with a `v`. For example when releasing version `1.0.0` of a
-   project, the tag name and GitHub release name should be `v1.0.0`.
+   referenced within the project's files, including in the `readme.txt`,
+   the main plugin file, etc, to the new version.
+3. Open a pull request for your new release branch.
+4. Once the pull request is approved, merge the pull request and create a new
+   [release](releases) for the project. The release name and tag name should be
+   the version name prefixed with a `v`. For example when releasing version
+   `1.0.0` of a project, the tag name and GitHub release name should be
+   `v1.0.0`.
 
    The description of the release should be the release notes from the
    `CHANGELOG`.

@@ -68,7 +68,7 @@ The default branch for repositories is `trunk`. Always work from the `trunk`
 branch and open up pull requests against it.
 
 Projects should always reference a tagged version of a project and never track
-`trunk`/`dev-trunk`. The `trunk` branch is considered 'nightly' or 'unstable' at
+`trunk`/`dev-trunk`. The `trunk` branch is considered 'nightly' and unstable at
 all times and is subject to change without notice. Releases that follow the
 [release process](#release-process) should always be backward compatible and
 well documented via a `CHANGELOG`.

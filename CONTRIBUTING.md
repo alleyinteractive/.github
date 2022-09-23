@@ -13,7 +13,7 @@ creating an issue or pull request.
 - [Best Practices](#best-practices)
   - [Branch Names](#branch-names)
   - [Coding Style](#coding-style)
-    - [WordPress Coding Standard](#wordpress-coding-standard)
+    - [Alley Coding Standard](#alley-coding-standard)
     - [Tests](#tests)
     - [Backward Compatibility](#backward-compatibility)
     - [Documentation](#documentation)
@@ -78,12 +78,11 @@ well documented via a `CHANGELOG`.
 If the project maintainer has any additional requirements, you will find them
 listed here.
 
-#### WordPress Coding Standard
+#### Alley Coding Standard
 
-Code must generally follow the [WordPress Coding
-Standard](wordpress-coding-standard). Our projects follow the standards via a
-[PHPCS ruleset](phpcs-ruleset) with some modifications from the core standards
-to allow for some added flexibility.
+Code must generally follow the [Alley Coding Standard](alley-coding-standards)
+which is a modified version of the [WordPress Coding
+Standards](wordpress-coding-standard).
 
 #### Tests
 
@@ -147,6 +146,6 @@ automate that process.
 [built-branch]: https://github.com/alleyinteractive/.github#built-branch
 [built-tag]: https://github.com/alleyinteractive/.github#built-tag
 [wordpress-coding-standard]: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/
-[phpcs-rulset]: https://github.com/alleyinteractive/alley-coding-standards
+[alley-coding-standards]: https://github.com/alleyinteractive/alley-coding-standards
 [semvar]: https://semver.org/
 [releases]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository

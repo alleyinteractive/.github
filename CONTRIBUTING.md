@@ -64,14 +64,19 @@ for the project.
 
 ### Branch Names
 
-The default branch for repositories is `trunk`. Always work from the `trunk`
-branch and open up pull requests against it.
+The default branch for open-source repositories is `develop`. Always work from
+the `develop` branch and open up pull requests against it.
+
+The default branch name of `develop` only applies to 'package' repositories that
+have the intended purpose of being distributed in a standalone
+plugin/library/framework/etc. Hosted packages, those where the repository
+represents a hosted website, should use `main` as a default branch name.
 
 Projects should always reference a tagged version of a project and never track
-`trunk`/`dev-trunk`. The `trunk` branch is considered 'nightly' and unstable at
-all times and is subject to change without notice. Releases that follow the
-[release process](#release-process) should always be backward compatible and
-well documented via a `CHANGELOG`.
+`develop`/`dev-develop`. The `develop` branch is considered 'nightly' and
+unstable at all times and is subject to change without notice. Releases that
+follow the [release process](#release-process) should always be backward
+compatible and well documented via a `CHANGELOG`.
 
 ### Coding Style
 

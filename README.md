@@ -149,6 +149,12 @@ npm run build
 - Accepts a boolean.
 - Defaults to `true`.
 
+##### `run-audit`
+
+- Specify if `npm audit --audit-level=high --production` should be run.
+- Accepts a boolean.
+- Defaults to `false`.
+
 ##### `run-test`
 
 - Specify if `npm run test` should be run.

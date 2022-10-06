@@ -15,6 +15,10 @@ on:
         default: true
         required: false
         type: boolean
+      run-audit:
+        default: false
+        required: false
+        type: boolean
       run-test:
         default: true
         required: false
@@ -62,6 +66,10 @@ jobs:
         with:
           cache: ${{ inputs.cache && steps.has-package-lock.outputs.exist == 'true' && inputs.cache || '' }}
           node-version: ${{ inputs.node }}
+
+      - name: Audit node
+        if: steps.has-node-assets.outputs.exists == 'true' && inputs.run-audit
+        run: npm audit --audit-level=high --production
 
       - name: Install node dependencies (npm install)
         if: steps.has-node-assets.outputs.exists == 'true' && ! inputs.ci

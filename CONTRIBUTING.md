@@ -78,7 +78,10 @@ Other projects may use `main` as a default branch under specific circumstances, 
 
 - Hosted packages: those where the repository represents a hosted website.
 - Projects that would never be submodule'd/downloaded directly into a project.
-  For example, a NPM package or Javascript library.
+  For example a NPM package or Javascript library.
+- Standalone repositories that are always considered canonical/final such as
+  [.github](https://github.com/alleyinteractive/.github) or
+  [https://github.com/alleyinteractive/mantle-ci](mantle-ci).
 
 In general, projects should always reference a tagged version of a project and
 never track `develop`/`dev-develop` directly. The `develop` branch is considered

@@ -48,12 +48,14 @@ issue, please check for the following:
 
 ## Maintainership
 
-All repositories should have a [CODEOWNERS](codeowners) file included with a
-specified owner for the project. Preferably a team or 2+ individuals would be
-marked as "owners" who are responsible for the project. These owners are
-responsible for the maintainership of the project and controlling the scope of
-features within the said project. They shall have the final say on whether or not a
-feature request is a good fit for the scope of a project.
+All repositories should have a
+[CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
+file included with a specified owner for the project. Preferably a team or 2+
+individuals would be marked as "owners" who are responsible for the project.
+These owners are responsible for the maintainership of the project and
+controlling the scope of features within the said project. They shall have the
+final say on whether or not a feature request is a good fit for the scope of a
+project.
 
 ## Best Practices
 
@@ -85,9 +87,10 @@ listed here.
 
 #### Alley Coding Standard
 
-Code must generally follow the [Alley Coding Standard](alley-coding-standards)
-which is a modified version of the [WordPress Coding
-Standards](wordpress-coding-standard).
+Code must generally follow the [Alley Coding
+Standard](https://github.com/alleyinteractive/alley-coding-standards) which is a
+modified version of the [WordPress Coding
+Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/).
 
 #### Tests
 
@@ -96,10 +99,10 @@ include tests could result in your contribution being declined.
 
 #### Backward Compatibility
 
-All contributions must be backward compatible unless a breaking change is
-being made intentionally. Breaking changes must follow [semantic
-versioning](semvar) and publish a new major release with a call out to the
-breaking change in the project's CHANGELOG.
+All contributions must be backward compatible unless a breaking change is being
+made intentionally. Breaking changes must follow [semantic
+versioning](https://semver.org/) and publish a new major release with a call out
+to the breaking change in the project's CHANGELOG.
 
 #### Documentation
 
@@ -113,23 +116,25 @@ branches. This includes minified CSS or built Javascript files. Repositories
 should use a GitHub action to produce a `*-built` branches and tags. These built
 branches/tags can be used as submodules or downloaded directly for external use.
 
-You can use a [Built Branch](built-branch) or [Built Tag](built-tag) action to
+You can use a [Built
+Branch](https://github.com/alleyinteractive/.github#built-branch) or [Built
+Tag](https://github.com/alleyinteractive/.github#built-tag) action to
 automatically compile your Composer/Node dependencies into `*-built` branches
 and tags.
 
 ### Release Process
 
 The following is a release process for all projects. All projects must follow
-[semantic versioning](semvar).
+[semantic versioning](https://semver.org/).
 
 1. Starting from the default branch of the repository, create a release branch
-   for your changes (`release/1.0.0` for example).
+   for your changes (`release/X.X.X` for example).
 2. Update the `CHANGELOG` with the release's changes. Bump the version
    referenced within the project's files, including in the `readme.txt`,
    the main plugin file, etc, to the new version.
 3. Open a pull request for your new release branch.
 4. Once the pull request is approved, merge the pull request and create a new
-   [release](releases) for the project. The release name and tag name should be
+   [release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) for the project. The release name and tag name should be
    the version name prefixed with a `v`. For example when releasing version
    `1.0.0` of a project, the tag name and GitHub release name should be
    `v1.0.0`.
@@ -146,11 +151,3 @@ After creating a new release, projects that are published to WordPress.org
 should automatically push a new release to WordPress.org. Consider using a
 [GitHub Action](https://github.com/10up/action-wordpress-plugin-deploy) to
 automate that process.
-
-[codeowners]: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
-[built-branch]: https://github.com/alleyinteractive/.github#built-branch
-[built-tag]: https://github.com/alleyinteractive/.github#built-tag
-[wordpress-coding-standard]: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/
-[alley-coding-standards]: https://github.com/alleyinteractive/alley-coding-standards
-[semvar]: https://semver.org/
-[releases]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository

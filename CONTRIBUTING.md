@@ -23,7 +23,7 @@ creating an issue or pull request.
 
 ## Code of Conduct
 
-Please read our [Code of Conduct](./CODE_OF_CONDUCT.md) to keep our open source
+Please read our [Code of Conduct](./CODE_OF_CONDUCT.md) to keep our open-source
 community approachable and respectable.
 
 ## Contribution Guidelines
@@ -59,26 +59,32 @@ project.
 
 ## Best Practices
 
-The following are best practices that we strive for in all of our projects. A
-project may override these where it makes sense. The respective project should
+The following are some best practices that we strive for in all of our projects.
+A project may override these where it makes sense. The respective project should
 have an updated `CONTRIBUTING.md` included with information about best practices
 for the project.
 
 ### Branch Names
 
-The default branch for open-source repositories is `develop`. Always work from
-the `develop` branch and open up pull requests against it.
+The default branch for open-source repositories is `develop` for projects that
+can be downloaded/submoduled into a project. Always work from the `develop`
+branch and open up pull requests against it.
 
 The default branch name of `develop` only applies to 'package' repositories that
 have the intended purpose of being distributed in a standalone
-plugin/library/framework/etc. Hosted packages, those where the repository
-represents a hosted website, should use `main` as a default branch name.
+plugin/library/framework/etc.
 
-Projects should always reference a tagged version of a project and never track
-`develop`/`dev-develop`. The `develop` branch is considered 'nightly' and
-unstable at all times and is subject to change without notice. Releases that
-follow the [release process](#release-process) should always be backward
-compatible and well documented via a `CHANGELOG`.
+Other projects may use `main` as a default branch under specific circumstances, including:
+
+- Hosted packages: those where the repository represents a hosted website.
+- Projects that would never be submodule'd/downloaded directly into a project.
+  For example, a NPM package or Javascript library.
+
+In general, projects should always reference a tagged version of a project and
+never track `develop`/`dev-develop` directly. The `develop` branch is considered
+'nightly' and unstable at all times and is subject to change without notice.
+Releases that follow the [release process](#release-process) should always be
+backward compatible and well documented via a `CHANGELOG`.
 
 ### Coding Style
 

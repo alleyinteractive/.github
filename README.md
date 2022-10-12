@@ -22,6 +22,7 @@ The following workflows are available to use:
 - [Built Branch](#built-branch)
 - [Built Tag](#built-tag)
 - [Dependabot Auto Merge](#dependabot-auto-merge)
+- [Dependabot Auto Approve](#dependabot-auto-approve)
 - [Node Tests](#node-tests)
 - [PHP Coding Standards](#php-coding-standards)
 - [PHP Tests](#php-tests)
@@ -108,7 +109,7 @@ Sets Dependabot pull requests to auto merge once they meet the requirements for 
 ```yml
 name: dependabot-auto-merge
 on:
-  pull_request_target:
+  pull_request:
 
 permissions:
   pull-requests: write
@@ -117,6 +118,27 @@ permissions:
 jobs:
   dependabot:
     uses: alleyinteractive/.github/.github/workflows/dependabot-auto-merge.yml@main
+```
+
+### Dependabot Auto Approve
+
+Automatically approves Dependabot pull requests for auto-merging when the
+default branch for a repository is protected.
+
+#### Usage
+
+```yml
+name: dependabot-auto-approve
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  dependabot:
+    uses: alleyinteractive/.github/.github/workflows/dependabot-auto-approve.yml@main
 ```
 
 ### Node Tests

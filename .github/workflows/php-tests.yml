@@ -75,7 +75,7 @@ jobs:
         run: composer validate --strict
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v1
+        uses: ramsey/composer-install@v2
         with:
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}

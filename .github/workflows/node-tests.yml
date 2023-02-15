@@ -50,22 +50,14 @@ jobs:
         shell: bash
         id: has-node-assets
         run: |
-          if [[ -f package.json ]]; then
-            echo "exists=true" >> $GITHUB_STATE
-          else
-            echo "exists=false" >> $GITHUB_STATE
-          fi
+          [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
 
       - name: Check if the plugin has a package-lock file
         shell: bash
         id: has-package-lock
         if: steps.has-node-assets.outputs.exists == 'true'
         run: |
-          if [[ -f package-lock.json ]]; then
-            echo "exists=true" >> $GITHUB_STATE
-          else
-            echo "exists=false" >> $GITHUB_STATE
-          fi
+          [[ -f package-lock.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
 
       - name: Setup Node
         if: steps.has-node-assets.outputs.exists == 'true'

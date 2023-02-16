@@ -27,7 +27,7 @@ jobs:
         shell: bash
         id: has-node-assets
         run: |
-          [[ -f package.json ]] && echo "::set-output name=exists::true" || echo "::set-output name=exists::false"
+          [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
         uses: php-actions/composer@v6
@@ -51,7 +51,7 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
         id: vars
 
       - name: Push to -built tag

@@ -11,6 +11,7 @@ creating an issue or pull request.
   - [Reporting Issues/Bugs](#reporting-issuesbugs)
 - [Maintainership](#maintainership)
 - [Best Practices](#best-practices)
+  - [Names and Namespaces for Open-Source PHP Packages](#names-and-namespaces-for-open-source-php-packages)
   - [Branch Names](#branch-names)
   - [Coding Style](#coding-style)
     - [Alley Coding Standard](#alley-coding-standard)
@@ -63,6 +64,49 @@ The following are some best practices that we strive for in all of our projects.
 A project may override these where it makes sense. The respective project should
 have an updated `CONTRIBUTING.md` included with information about best practices
 for the project.
+
+### Names and Namespaces for Open-Source PHP Packages
+
+#### Package names
+
+Package names should be written in lowercase. Words should be separated with hyphens.
+
+* Recommended: `alleyinteractive/traverse-reshape`, `alleyinteractive/simple-laravel-roles`
+* Not recommended: `alleyinteractive/traverse_reshape`, `alleyinteractive/simpleLaravelRoles`
+
+WordPress packages should be prefixed with `wp-`.
+
+* Recommended: `alleyinteractive/wp-bulk-task`, `alleyinteractive/wp-caper`
+* Not recommended: `alleyinteractive/bulk-task`, `alleyinteractive/alley-wp-caper`
+
+#### PHP namespaces
+
+General PHP packages should use the `Alley\` top-level namespace.
+
+* Recommended: `Alley\traverse()`
+* Not recommended: `Traverse\traverse()`
+
+WordPress packages should use the `Alley\WP\` top-level namespace.
+
+* Recommended: `new Alley\WP\Bulk_Task()`, `Alley\WP\Path_Dispatch::instance()`, `Alley\WP\find_one_post()`
+* Not recommended: `new Alley\Bulk_Task()`, `WP_Path_Dispatch\Path_Dispatch::instance()`, `Alley\find_one_wp_post()`
+
+Functions in the global namespace should be prefixed with `alley_`. Objects in
+the global namespace should be prefixed with `Alley_`.
+
+* Recommended: `alley_loop_template_part()`, `Alley_Singleton`
+* Not recommended: `ai_loop_template_part()`, `AI_Singleton`
+
+Packages may implement their own sub-namespaces.
+
+* General PHP example: `new Alley\Validator\One_Of()`
+* WordPress example: `new Alley\WP\Elasticsearch_Extensions\Controller()`
+
+Packages should use the `Internals` sub-namespace for functions and objects
+that are meant to be exempt from semantic versioning rules.
+
+* General PHP example: `Alley\Internals\`
+* WordPress example: `Alley\WP\Internals\`
 
 ### Branch Names
 

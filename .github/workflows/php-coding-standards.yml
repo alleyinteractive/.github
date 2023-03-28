@@ -12,7 +12,7 @@ on:
         required: false
         type: "string"
       working-directory:
-        default: ""
+        default: "."
         required: false
         type: "string"
 

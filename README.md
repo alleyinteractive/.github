@@ -228,11 +228,18 @@ run your tests.
 - Accepts a number.
 - Defaults to `8.0`.
 
-##### `wordpress`
+##### `dependency-versions`
 
-- Specify the WordPress version to use.
+- Allows you to select whether the job should install the locked, highest, or
+  lowest versions of Composer dependencies.
+- Accepts a string: `locked`, `highest`, or `lowest`.
+- Defaults to `locked`.
+
+##### `working-directory`
+
+- Specify the working directory to use.
 - Accepts a string.
-- Defaults to `latest`.
+- Defaults to the root of the repository.
 
 #### Usage
 

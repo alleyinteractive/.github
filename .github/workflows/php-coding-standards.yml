@@ -11,9 +11,16 @@ on:
         default: "locked"
         required: false
         type: "string"
+      working-directory:
+        default: "."
+        required: false
+        type: "string"
 
 jobs:
   tests:
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
     runs-on: ubuntu-latest
     name: phpcs ${{ inputs.php }}
     steps:
@@ -31,6 +38,7 @@ jobs:
       - name: Install dependencies
         uses: ramsey/composer-install@v2
         with:
+          working-directory: ${{ inputs.working-directory }}
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
 

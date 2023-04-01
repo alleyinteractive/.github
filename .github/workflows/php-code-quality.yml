@@ -3,7 +3,7 @@ name: Code Quality
 on:
   workflow_call:
     inputs:
-	  command:
+      command:
         default: "phpstan"
         required: false
         type: "string"

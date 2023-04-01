@@ -1,0 +1,53 @@
+name: Code Quality
+
+on:
+  workflow_call:
+    inputs:
+	  command:
+        default: "phpstan"
+        required: false
+        type: "string"
+      php:
+        default: 8.0
+        required: false
+        type: number
+      dependency-versions:
+        default: "locked"
+        required: false
+        type: "string"
+      working-directory:
+        default: "."
+        required: false
+        type: "string"
+
+jobs:
+  tests:
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    runs-on: ubuntu-latest
+    name: phpstan ${{ inputs.php }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          working-directory: ${{ inputs.working-directory }}
+          composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
+          dependency-versions: ${{ inputs.dependency-versions }}
+
+      - name: Validate Composer
+        run: composer validate --strict
+
+      - name: Run phpstan
+        run: composer run ${{ inputs.command }}

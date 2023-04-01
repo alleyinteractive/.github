@@ -23,6 +23,7 @@ The following workflows are available to use:
 - [Dependabot Auto Merge](#dependabot-auto-merge)
 - [Dependabot Auto Approve](#dependabot-auto-approve)
 - [Node Tests](#node-tests)
+- [PHP Code Quality](#php-code-quality)
 - [PHP Coding Standards](#php-coding-standards)
 - [PHP Tests](#php-tests)
 

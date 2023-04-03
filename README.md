@@ -14,7 +14,6 @@ The repository also contains reusable Github workflows for use on any public
 repository. These workflows are reused across the organization to perform
 continuous integration tests with Github Actions.
 
-
 ## Reusable Workflows
 
 The following workflows are available to use:
@@ -24,6 +23,7 @@ The following workflows are available to use:
 - [Dependabot Auto Merge](#dependabot-auto-merge)
 - [Dependabot Auto Approve](#dependabot-auto-approve)
 - [Node Tests](#node-tests)
+- [PHP Code Quality](#php-code-quality)
 - [PHP Coding Standards](#php-coding-standards)
 - [PHP Tests](#php-tests)
 
@@ -146,7 +146,7 @@ jobs:
 Run automated Node tests against your repository. Assumes that your plugin will
 have the following commands available to it:
 
-```
+```sh
 npm run lint
 npm run test
 npm run build
@@ -257,6 +257,58 @@ on:
 jobs:
   coding-standards:
     uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
+```
+
+### PHP Code Quality
+
+Run `phpstan` tests against your project. Assumes that `composer run phpstan` will
+run your tests.
+
+#### Inputs
+
+> Specify using `with` keyword.
+
+##### `command`
+
+- Specify the Composer command to use for testing.
+- Accepts a string.
+- Defaults to `phpstan`.
+
+##### `php`
+
+- Specify the PHP version to use.
+- Accepts a number.
+- Defaults to `8.0`.
+
+##### `dependency-versions`
+
+- Allows you to select whether the job should install the locked, highest, or
+  lowest versions of Composer dependencies.
+- Accepts a string: `locked`, `highest`, or `lowest`.
+- Defaults to `locked`.
+
+##### `working-directory`
+
+- Specify the working directory to use.
+- Accepts a string.
+- Defaults to the root of the repository.
+
+#### Usage
+
+```yml
+name: Code Quality
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  coding-standards:
+    uses: alleyinteractive/.github/.github/workflows/php-code-quality.yml@main
 ```
 
 ### PHP Tests

@@ -307,7 +307,7 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  coding-quality:
+  code-quality:
     uses: alleyinteractive/.github/.github/workflows/php-code-quality.yml@main
 ```
 

@@ -12,12 +12,15 @@ body:
     attributes:
       label: Description
       description: Provide a detailed description of the feature or enhancement you would like to see incorporated.
+      placeholder: |
+        e.g.
+        I would like to see <...> incorporated into <...> so that <...> can be achieved.
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: Use Case
-      description: Provide detailed description of the use case for this feature/enhancement.
+      description: Provide a detailed description of the use case for this feature/enhancement.
     validations:
       required: true

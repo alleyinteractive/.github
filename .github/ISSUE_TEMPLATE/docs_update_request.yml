@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Thank you for taking the time to fill out this documentation update request!
-        Before submitting your issue, please ensure that you have read our Contributor Code of Conduct and you have read through existing issues (opened and closed) so as to avoid creating duplicates. 🙏 
+        Before submitting your issue, please ensure that you have read our [Code of Conduct](https://github.com/alleyinteractive/.github/blob/main/CODE_OF_CONDUCT.md) and you have read through existing issues (opened and closed) so as to avoid creating duplicates. 🙏 
 
   - type: textarea
     attributes:

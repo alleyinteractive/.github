@@ -14,7 +14,7 @@ body:
       id: documentation-inaccuracy-description
       label: Description of the documentation inaccuracy
       description: Please write a brief description of the documentation that you believe should be updated, including what you expect to see and what is currently included in the docs.
-      value: | 
+      placeholder: | 
         Within <some section> of the documentation, <some text> is not correct. 
         It says <x>, but looking at the code, it should say <y>.
     validations:

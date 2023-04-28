@@ -14,7 +14,7 @@ body:
       id: bug-description
       label: Description of the bug
       description: Please write a brief description of the bug, including what you expect to happen and what is currently happening.
-      value: | 
+      placeholder: | 
         <Some feature> is not working properly. 
         I would expect <x> to happen, but instead <y> happens.
     validations:

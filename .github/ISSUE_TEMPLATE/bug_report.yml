@@ -26,7 +26,6 @@ body:
       label: Steps To Reproduce
       description: Provide detailed steps to reproduce your issue.
       placeholder: |
-        e.g.
         1. Configure <...> with <...> 
         2. Go to <...>
         3. Click on <...>

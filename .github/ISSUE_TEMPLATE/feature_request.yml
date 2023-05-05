@@ -1,12 +1,11 @@
 name: Feature or Enhancement Request
 description: Request a new feature or enhancement
 labels: ["enhancement"]
-title: "[FEATURE]: "
 body:
   - type: markdown
     attributes:
       value: |
-        Before submitting your issue, please ensure that you have read our [Code of Conduct](https://github.com/alleyinteractive/.github/blob/main/CODE_OF_CONDUCT.md) and you have read through existing issues so as to avoid creating duplicates. 🙏 
+        Before submitting your issue, please ensure that you have read our [Code of Conduct](https://github.com/alleyinteractive/.github/blob/main/CODE_OF_CONDUCT.md) and you have read through existing issues so as to avoid creating duplicates. 🙏
 
   - type: textarea
     attributes:

@@ -10,4 +10,4 @@ Alley was founded in 2010. Since then, we’ve grown into a globally-distributed
 
 We offer competitive salaries, health insurance, vision and dental insurance, life insurance, short and long term disability, 401k with company matching, profit sharing, and a flexible time off policy. We also provide a monthly lunch stipend, an equipment allowance, and a professional development budget.
 
-[![Alley: Join us in our mission to reclaim the internet as an awesome place to work, play, and explore](./bumper.png)](https://www.alley.com/)
+[![Alley: Join us in our mission to reclaim the internet as an awesome place to work, play, and explore](./bumper.png)](https://www.alley.com/careers/)

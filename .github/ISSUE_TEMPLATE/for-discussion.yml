@@ -1,7 +1,6 @@
 name: For Discussion
-description: Open a new topic for discussion
+description: Open a topic for discussion
 labels: ["discussion"]
-title: "[DISCUSSION]: "
 body:
   - type: markdown
     attributes:

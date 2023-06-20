@@ -65,7 +65,12 @@ jobs:
           git config --global user.name "$GITHUB_ACTOR"
 
           rm -rf .gitignore docker_tag output.log .github
-          mv .deployignore .gitignore
+
+          if [[ -e "$GITHUB_WORKSPACE/.deployignore" ]]; then
+            mv .deployignore .gitignore
+          elif [[ -e "$GITHUB_WORKSPACE/.distignore" ]]; then
+            mv .distignore .gitignore
+          fi
 
           git checkout -b $BUILT_BRANCH
 

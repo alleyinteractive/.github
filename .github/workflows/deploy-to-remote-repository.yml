@@ -1,0 +1,105 @@
+name: Sync to remote repository
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        default: "ubuntu-latest"
+        required: false
+        type: string
+      remote_repo:
+        description: 'Remote repository URL'
+        required: true
+        type: string
+      remote_branch:
+        description: 'Remote branch to clone and push'
+        required: false
+        type: string
+      base_directory:
+        description: 'Base directory for rsync'
+        required: false
+        default: '.'
+        type: string
+      destination_directory:
+        description: 'Destination directory for rsync in remote repository'
+        required: false
+        default: '.'
+        type: string
+      exclude_list:
+        description: 'Comma-separated list of files and directories to exclude from sync'
+        required: false
+        default: '.git, .gitmodules'
+        type: string
+    secrets:
+      REMOTE_REPO_SSH_KEY:
+        description: 'SSH key for remote repository'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ${{ inputs.os }}
+    name: "Syncing ${{ inputs.base_directory }} to ${{ inputs.remote_repo }}@${REMOTE_BRANCH}: ${{ inputs.destination_directory }}"
+
+    env:
+      GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/private_key
+      REMOTE_REPO_DIR: /tmp/remote_repo
+      REMOTE_BRANCH: ${{ inputs.remote_branch != '' && inputs.remote_branch || github.ref_name }}
+      SSH_KEY: ${{ secrets.REMOTE_REPO_SSH_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Save commit message
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          echo "$COMMIT_MESSAGE" > /tmp/commit.message
+        shell: bash
+      - name: Install rsync
+        run: sudo apt-get install -y rsync
+        shell: bash
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          # Write the private key to a file, interpret any escaped newlines
+          echo -e "${SSH_KEY}" > ~/.ssh/private_key
+          chmod 600 ~/.ssh/private_key
+        shell: bash
+      - name: Clone remote repository
+        run: |
+          git clone --branch ${REMOTE_BRANCH} ${{ inputs.remote_repo }} ${REMOTE_REPO_DIR}
+        shell: bash
+      - name: Rsync current repository to remote repository
+        run: |
+          EXCLUDES=(${{ inputs.exclude_list }})
+          EXCLUDE_OPTIONS="--exclude=.git "
+          for EXCLUDE in "${EXCLUDES[@]}"; do
+            EXCLUDE_OPTIONS+="--exclude=$EXCLUDE "
+          done
+
+          rsync -av $EXCLUDE_OPTIONS ${{ inputs.base_directory }} ${REMOTE_REPO_DIR}/${{ inputs.destination_directory }} --delete
+
+        shell: bash
+      - name: Commit and push changes to remote repository
+        run: |
+          cd ${REMOTE_REPO_DIR}
+
+          # Set git user.name to include repository name
+          REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F '/' '{print $2}')
+          git config user.name "${REPO_NAME} GitHub Action"
+          git config user.email "action@github.com"
+
+          git add -A
+          git status
+          git commit --allow-empty -a --file=/tmp/commit.message
+
+          # Push the new branch to the remote repository
+          echo "Pushing to ${{ inputs.remote_repo }}@${REMOTE_BRANCH}"
+          git push -u origin
+        shell: bash
+      - name: Cleanup
+        run: |
+          rm -rf ${REMOTE_REPO_DIR}
+          rm -f /tmp/commit.message
+          rm -f ~/.ssh/private_key
+        shell: bash

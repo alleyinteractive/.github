@@ -26,7 +26,7 @@ The following workflows are available to use:
 - [PHP Code Quality](#php-code-quality)
 - [PHP Coding Standards](#php-coding-standards)
 - [PHP Tests](#php-tests)
-- [Deploy to Remote Repository](#deploy-to-remote-repo)
+- [Deploy to Remote Repository](#deploy-to-remote-repository)
 
 ### Built Branch
 
@@ -443,7 +443,7 @@ _Notes_:
 
 - Specify the base directory to sync from.
 - Accepts a string.
-- Defaults to the root of the repository (`.`).
+- Defaults to the root of the repository (`.`). **NOTE** You likely want a trailing slash if you're syncing a subdirectory. (eg. `wp-content/`)
 
 ##### `destination_directory`
 
@@ -468,6 +468,8 @@ _Notes_:
 
 #### Usage
 
+Example deploy to VIP:
+
 ```yml
 name: Deploy to VIP repository
 
@@ -484,6 +486,28 @@ jobs:
     with:
       remote_repo: 'git@github.com:wpcomvip/alley.git'
       exclude_list: '.git, .gitmodules, .revision, .deployment-state, .node_modules, no-vip'
+    secrets:
+      REMOTE_REPO_SSH_KEY: ${{ secrets.REMOTE_REPO_SSH_KEY }}
+```
+
+Example Deploy to Pantheon multidev sites labeled `prepod` and `develop`:
+
+```yml
+name: Deploy to Pantheon repository
+
+on:
+  push:
+    branches:
+      - preprod
+      - develop
+
+jobs:
+  sync-to-vip:
+    uses: alleyinteractive/.github/.github/workflows/deploy-to-remote-repository.yml@main
+    with:
+      remote_repo: 'ssh://codeserver.dev.SOME-PANTHEON-SITE_ID@codeserver.dev.SOME-PANTHEON-SITE_ID.drush.in:2222/~/repository.git'
+      destination_directory: 'wp-content/'
+      exclude_list: '.git, pantheon-mu-plugin'
     secrets:
       REMOTE_REPO_SSH_KEY: ${{ secrets.REMOTE_REPO_SSH_KEY }}
 ```

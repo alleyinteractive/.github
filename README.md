@@ -453,7 +453,7 @@ _Notes_:
 
 ##### `exclude_list`
 
-- Specify a Comma-separated list of files and directories to exclude from sync.
+- Specify a comma-separated list of files and directories to exclude from sync.
 - Accepts a string. (e.g. `.git, .gitmodules`)
 - Defaults to `.git, .gitmodules`.
 
@@ -490,7 +490,7 @@ jobs:
       REMOTE_REPO_SSH_KEY: ${{ secrets.REMOTE_REPO_SSH_KEY }}
 ```
 
-Example Deploy to Pantheon multidev sites labeled `prepod` and `develop`:
+Example Deploy to Pantheon multidev sites labeled `preprod` and `develop`:
 
 ```yml
 name: Deploy to Pantheon repository
@@ -502,7 +502,7 @@ on:
       - develop
 
 jobs:
-  sync-to-vip:
+  sync-to-pantheon:
     uses: alleyinteractive/.github/.github/workflows/deploy-to-remote-repository.yml@main
     with:
       remote_repo: 'ssh://codeserver.dev.SOME-PANTHEON-SITE_ID@codeserver.dev.SOME-PANTHEON-SITE_ID.drush.in:2222/~/repository.git'

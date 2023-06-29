@@ -304,10 +304,10 @@ on:
 jobs:
   code-quality:
     uses: alleyinteractive/.github/.github/workflows/php-composer-command.yml@main
-	with:
-	  command: |
-	    lint
-	    phpunit
+    with:
+      command: |
+        lint
+        phpunit
 ```
 
 ### PHP Code Quality

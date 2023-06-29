@@ -45,10 +45,12 @@ jobs:
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
 
-      - name: Run ${{ inputs.command }}
+      - name: Run Commands
         env:
           COMPOSER_COMMANDS: ${{ inputs.command }}
         run: |
+          echo "Commands to run: $COMPOSER_COMMANDS"
+
           # Ensure that Composer commands are defined
           if [ -z "$COMPOSER_COMMANDS" ]; then
             echo "No commands to run"

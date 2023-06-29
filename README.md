@@ -28,7 +28,7 @@ The following workflows are available to use:
 - Testing Workflows
   - [Node Tests](#node-tests)
   - [PHP Composer Script](#php-composer-script)
-  - [PHP Tests](#php-tests)
+  - [PHP Tests with MySQL](#php-tests-with-mysql)
   - [PHP Code Quality](#php-code-quality)
   - [PHP Coding Standards](#php-coding-standards)
 
@@ -224,7 +224,8 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 <command>` will run your tests. Supports multiple commands with a multi-line
 `command` input.
 
-> Note: This workflow does not setup MySQL for testing. Use the [PHP Tests](#php-tests) workflow for that.
+> Note: This workflow does not setup MySQL for testing. Use the
+> [PHP Tests with MySQL](#php-tests-with-mysql) workflow for that.
 
 #### Inputs
 
@@ -262,7 +263,7 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  code-quality:
+  composer-lint-phpunit:
     uses: alleyinteractive/.github/.github/workflows/php-composer-command.yml@main
     with:
       command: |

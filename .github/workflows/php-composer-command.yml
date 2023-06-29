@@ -75,8 +75,8 @@ jobs:
 
           # Run each command in the array
           for command in "${commands[@]}"; do
-            echo "Running: composer $command"
-            composer "$command"
+            echo "Running: composer run $command"
+            composer run "$command"
           done
 
           exit 0

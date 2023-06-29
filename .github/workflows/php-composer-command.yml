@@ -68,8 +68,8 @@ jobs:
             exit 1
           fi
 
-          # Split the commnad string into an array by new line.
-          IFS=$'\n' read -rd '' -a commands <<< "$COMPOSER_COMMANDS"
+          # Split the command string into an array by the %0A delimiter
+          IFS='%0A' read -ra commands <<< "$COMPOSER_COMMANDS"
 
           set -e
 

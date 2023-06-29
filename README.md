@@ -23,6 +23,7 @@ The following workflows are available to use:
 - [Dependabot Auto Merge](#dependabot-auto-merge)
 - [Dependabot Auto Approve](#dependabot-auto-approve)
 - [Node Tests](#node-tests)
+- [PHP Composer Script](#php-composer-script)
 - [PHP Code Quality](#php-code-quality)
 - [PHP Coding Standards](#php-coding-standards)
 - [PHP Tests](#php-tests)
@@ -258,6 +259,55 @@ on:
 jobs:
   coding-standards:
     uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
+```
+
+### PHP Composer Script
+
+Run a set of Composer scripts against your project. Assumes that `composer run
+<command>` will run your tests. Supports multiple commands.
+
+#### Inputs
+
+> Specify using `with` keyword.
+
+##### `command`
+
+- Specify the Composer command to use for testing.
+- Accepts a string.
+- Required.
+
+##### `php`
+
+- Specify the PHP version to use.
+- Accepts a number.
+- Defaults to `8.0`.
+
+##### `working-directory`
+
+- Specify the working directory to use.
+- Accepts a string.
+- Defaults to the root of the repository.
+
+#### Usage
+
+```yml
+name: Composer Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  code-quality:
+    uses: alleyinteractive/.github/.github/workflows/php-composer-command.yml@main
+	with:
+	  command: |
+	    lint
+	    phpunit
 ```
 
 ### PHP Code Quality

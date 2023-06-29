@@ -58,7 +58,7 @@ jobs:
 
       - name: Run Commands
         env:
-          COMPOSER_COMMANDS: ${{ steps.set.outputs.value }}
+          COMPOSER_COMMANDS: ${{ steps.set.outputs.content }}
         run: |
           echo "Commands to run: $COMPOSER_COMMANDS"
 

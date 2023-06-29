@@ -45,9 +45,9 @@ jobs:
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
 
-      # Set the commands as an environment variable
-      - id: set
+      - id: commands-to-run
         shell: bash
+        name: Extract Commands
         env:
           text: ${{ inputs.command }}
         run: |
@@ -58,7 +58,7 @@ jobs:
 
       - name: Run Commands
         env:
-          COMPOSER_COMMANDS: ${{ steps.set.outputs.content }}
+          COMPOSER_COMMANDS: ${{ steps.commands-to-run.outputs.value }}
         run: |
           echo "Commands to run: $COMPOSER_COMMANDS"
 

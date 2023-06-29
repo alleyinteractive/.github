@@ -45,20 +45,8 @@ jobs:
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
 
-      # - id: commands-to-run
-      #   shell: bash
-      #   name: Extract Commands
-      #   env:
-      #     text: ${{ inputs.command }}
-      #   run: |
-      #     text="${text//'%'/'%25'}"
-      #     text="${text//$'\n'/'%0A'}"
-      #     text="${text//$'\r'/'%0D'}"
-      #     echo "value=$text" >> $GITHUB_OUTPUT
-
       - name: Run Commands
         env:
-          # COMPOSER_COMMANDS: ${{ steps.commands-to-run.outputs.value }}
           COMPOSER_COMMANDS: ${{ inputs.command }}
         run: |
           echo "Commands to run: $COMPOSER_COMMANDS"
@@ -69,8 +57,8 @@ jobs:
             exit 1
           fi
 
-          # Split the command string into an array by the %0A or newline
-          IFS='%0A' read -ra commands <<< "$COMPOSER_COMMANDS"
+          # Split the command string into an array by newline
+          IFS=$'\n' read -rd '' -a commands <<<"$COMPOSER_COMMANDS"
 
           set -e
 
@@ -79,5 +67,3 @@ jobs:
             echo "Running: composer run $command"
             composer run "$command"
           done
-
-          exit 0

@@ -45,9 +45,20 @@ jobs:
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
 
+      # Set the commands as an environment variable
+      - id: set
+        shell: bash
+        env:
+          text: ${{ inputs.command }}
+        run: |
+          text="${text//'%'/'%25'}"
+          text="${text//$'\n'/'%0A'}"
+          text="${text//$'\r'/'%0D'}"
+          echo "value=$text" >> $GITHUB_OUTPUT
+
       - name: Run Commands
         env:
-          COMPOSER_COMMANDS: ${{ inputs.command }}
+          COMPOSER_COMMANDS: ${{ steps.set.outputs.value }}
         run: |
           echo "Commands to run: $COMPOSER_COMMANDS"
 

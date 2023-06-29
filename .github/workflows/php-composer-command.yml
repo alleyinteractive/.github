@@ -57,6 +57,8 @@ jobs:
             exit 1
           fi
 
+          set +e
+
           # Split the command string into an array by newline
           IFS=$'\n' read -rd '' -a commands <<<"$COMPOSER_COMMANDS"
 

@@ -57,11 +57,13 @@ jobs:
             exit 1
           fi
 
+          # Allow errors to be ignored
           set +e
 
           # Split the command string into an array by newline
           IFS=$'\n' read -rd '' -a commands <<<"$COMPOSER_COMMANDS"
 
+          # Re-enable errors causing the script to exit
           set -e
 
           # Run each command in the array

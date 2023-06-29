@@ -18,16 +18,19 @@ continuous integration tests with Github Actions.
 
 The following workflows are available to use:
 
-- [Built Branch](#built-branch)
-- [Built Tag](#built-tag)
-- [Dependabot Auto Merge](#dependabot-auto-merge)
-- [Dependabot Auto Approve](#dependabot-auto-approve)
-- [Node Tests](#node-tests)
-- [PHP Composer Script](#php-composer-script)
-- [PHP Code Quality](#php-code-quality)
-- [PHP Coding Standards](#php-coding-standards)
-- [PHP Tests](#php-tests)
-- [Deploy to Remote Repository](#deploy-to-remote-repository)
+- Built Branches/Tags and Other Deployment Workflows
+  - [Built Branch](#built-branch)
+  - [Built Tag](#built-tag)
+  - [Deploy to Remote Repository](#deploy-to-remote-repository)
+- Dependabot Management
+  - [Dependabot Auto Merge](#dependabot-auto-merge)
+  - [Dependabot Auto Approve](#dependabot-auto-approve)
+- Testing Workflows
+  - [Node Tests](#node-tests)
+  - [PHP Composer Script](#php-composer-script)
+  - [PHP Tests](#php-tests)
+  - [PHP Code Quality](#php-code-quality)
+  - [PHP Coding Standards](#php-coding-standards)
 
 ### Built Branch
 
@@ -215,56 +218,13 @@ jobs:
     uses: alleyinteractive/.github/.github/workflows/node-tests.yml@main
 ```
 
-### PHP Coding Standards
-
-Run `phpcs` tests against your project. Assumes that `composer run phpcs` will
-run your tests.
-
-#### Inputs
-
-> Specify using `with` keyword.
-
-##### `php`
-
-- Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
-
-##### `dependency-versions`
-
-- Allows you to select whether the job should install the locked, highest, or
-  lowest versions of Composer dependencies.
-- Accepts a string: `locked`, `highest`, or `lowest`.
-- Defaults to `locked`.
-
-##### `working-directory`
-
-- Specify the working directory to use.
-- Accepts a string.
-- Defaults to the root of the repository.
-
-#### Usage
-
-```yml
-name: Coding Standards
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-  schedule:
-    - cron: '0 0 * * *'
-
-jobs:
-  coding-standards:
-    uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
-```
-
 ### PHP Composer Script
 
 Run a set of Composer scripts against your project. Assumes that `composer run
-<command>` will run your tests. Supports multiple commands.
+<command>` will run your tests. Supports multiple commands with a multi-line
+`command` input.
+
+> Note: This workflow does not setup MySQL for testing. Use the [PHP Tests](#php-tests) workflow for that.
 
 #### Inputs
 
@@ -310,59 +270,7 @@ jobs:
         phpunit
 ```
 
-### PHP Code Quality
-
-Run `phpstan` tests against your project. Assumes that `composer run phpstan` will
-run your tests.
-
-#### Inputs
-
-> Specify using `with` keyword.
-
-##### `command`
-
-- Specify the Composer command to use for testing.
-- Accepts a string.
-- Defaults to `phpstan`.
-
-##### `php`
-
-- Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
-
-##### `dependency-versions`
-
-- Allows you to select whether the job should install the locked, highest, or
-  lowest versions of Composer dependencies.
-- Accepts a string: `locked`, `highest`, or `lowest`.
-- Defaults to `locked`.
-
-##### `working-directory`
-
-- Specify the working directory to use.
-- Accepts a string.
-- Defaults to the root of the repository.
-
-#### Usage
-
-```yml
-name: Code Quality
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-  schedule:
-    - cron: '0 0 * * *'
-
-jobs:
-  code-quality:
-    uses: alleyinteractive/.github/.github/workflows/php-code-quality.yml@main
-```
-
-### PHP Tests
+### PHP Tests with MySQL
 
 Run PHPUnit tests against your project. Installs and configures MySQL for
 WordPress unit testing. Assumes that `composer run phpunit` will run your unit
@@ -560,4 +468,106 @@ jobs:
       exclude_list: '.git, pantheon-mu-plugin'
     secrets:
       REMOTE_REPO_SSH_KEY: ${{ secrets.REMOTE_REPO_SSH_KEY }}
+```
+
+### PHP Code Quality
+
+Run `phpstan` tests against your project. Assumes that `composer run phpstan` will
+run your tests.
+
+> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) action.
+
+#### Inputs
+
+> Specify using `with` keyword.
+
+##### `command`
+
+- Specify the Composer command to use for testing.
+- Accepts a string.
+- Defaults to `phpstan`.
+
+##### `php`
+
+- Specify the PHP version to use.
+- Accepts a number.
+- Defaults to `8.0`.
+
+##### `dependency-versions`
+
+- Allows you to select whether the job should install the locked, highest, or
+  lowest versions of Composer dependencies.
+- Accepts a string: `locked`, `highest`, or `lowest`.
+- Defaults to `locked`.
+
+##### `working-directory`
+
+- Specify the working directory to use.
+- Accepts a string.
+- Defaults to the root of the repository.
+
+#### Usage
+
+```yml
+name: Code Quality
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  code-quality:
+    uses: alleyinteractive/.github/.github/workflows/php-code-quality.yml@main
+```
+
+### PHP Coding Standards
+
+Run `phpcs` tests against your project. Assumes that `composer run phpcs` will
+run your tests.
+
+> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) action.
+
+#### Inputs
+
+> Specify using `with` keyword.
+
+##### `php`
+
+- Specify the PHP version to use.
+- Accepts a number.
+- Defaults to `8.0`.
+
+##### `dependency-versions`
+
+- Allows you to select whether the job should install the locked, highest, or
+  lowest versions of Composer dependencies.
+- Accepts a string: `locked`, `highest`, or `lowest`.
+- Defaults to `locked`.
+
+##### `working-directory`
+
+- Specify the working directory to use.
+- Accepts a string.
+- Defaults to the root of the repository.
+
+#### Usage
+
+```yml
+name: Coding Standards
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  coding-standards:
+    uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
 ```

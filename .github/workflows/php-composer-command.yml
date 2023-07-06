@@ -1,0 +1,73 @@
+name: Composer Command
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        default: "test"
+        required: true
+        type: "string"
+      php:
+        default: "8.0"
+        required: false
+        type: string
+      dependency-versions:
+        default: "locked"
+        required: false
+        type: "string"
+      working-directory:
+        default: "."
+        required: false
+        type: "string"
+
+jobs:
+  tests:
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    runs-on: ubuntu-latest
+    name: ${{ inputs.command }} PHP ${{ inputs.php }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          working-directory: ${{ inputs.working-directory }}
+          composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
+          dependency-versions: ${{ inputs.dependency-versions }}
+
+      - name: Run Commands
+        env:
+          COMPOSER_COMMANDS: ${{ inputs.command }}
+        run: |
+          echo "Commands to run: $COMPOSER_COMMANDS"
+
+          # Ensure that Composer commands are defined
+          if [ -z "$COMPOSER_COMMANDS" ]; then
+            echo "No commands to run"
+            exit 1
+          fi
+
+          # Allow errors to be ignored
+          set +e
+
+          # Split the command string into an array by newline
+          IFS=$'\n' read -rd '' -a commands <<<"$COMPOSER_COMMANDS"
+
+          # Re-enable errors causing the script to exit
+          set -e
+
+          # Run each command in the array
+          for command in "${commands[@]}"; do
+            echo "Running: composer run $command"
+            composer run "$command"
+          done

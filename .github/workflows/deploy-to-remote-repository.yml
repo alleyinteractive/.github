@@ -30,6 +30,11 @@ on:
         required: false
         default: '.git, .gitmodules'
         type: string
+      skip-checkout:
+        description: 'Skip checkout of the repository'
+        required: false
+        default: false
+        type: boolean
     secrets:
       REMOTE_REPO_SSH_KEY:
         description: 'SSH key for remote repository'
@@ -48,7 +53,10 @@ jobs:
 
     steps:
       - name: Checkout code
+        if: ${{ !inputs.skip_checkout }}
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Save commit message
         run: |

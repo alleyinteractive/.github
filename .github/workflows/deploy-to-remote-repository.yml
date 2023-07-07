@@ -93,8 +93,8 @@ jobs:
           if [ -f "${REMOTE_REPO_DIR}/${{ inputs.destination_directory }}/.deployignore" ]; then
             echo "Replacing .gitignore with .deployignore"
 
-            find "${REMOTE_REPO_DIR}/${{ inputs.destination_directory }}"" -type f -name '.gitignore' | while read GITIGNORE_FILE; do
-              echo "# Emptied by vip-go-build; '.deployignore' exists and used as global .gitignore." > $GITIGNORE_FILE
+            find "${REMOTE_REPO_DIR}/${{ inputs.destination_directory }}" -type f -name '.gitignore' | while read GITIGNORE_FILE; do
+              echo "# Emptied by vip-go-build; '.deployignore' exists and used as global .gitignore." > "$GITIGNORE_FILE"
               echo "${GITIGNORE_FILE}"
             done
 

@@ -52,6 +52,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
 
       - name: Check if the plugin has front-end assets
         shell: bash

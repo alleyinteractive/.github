@@ -205,6 +205,12 @@ npm run build
 - Accepts a boolean.
 - Defaults to `true`.
 
+##### `working-directory`
+
+- Specify the working directory to use.
+- Accepts a string.
+- Defaults to the root of the repository.
+
 #### Usage
 
 ```yml

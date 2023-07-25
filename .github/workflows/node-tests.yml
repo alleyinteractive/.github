@@ -31,9 +31,16 @@ on:
         default: true
         required: false
         type: boolean
+      working-directory:
+        default: "."
+        required: false
+        type: "string"
 
 jobs:
   npm-ci:
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
     name: Install, build, and test
     runs-on: ubuntu-latest
     steps:

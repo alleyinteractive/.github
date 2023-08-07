@@ -4,9 +4,9 @@ on:
   workflow_call:
     inputs:
       php:
-        default: 8.0
+        default: "8.0"
         required: false
-        type: number
+        type: string
       dependency-versions:
         default: "locked"
         required: false
@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

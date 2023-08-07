@@ -43,8 +43,8 @@ Create a `*-built` version of a branch for use in submodules.
 ##### `php`
 
 - Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
+- Accepts a string.
+- Defaults to `'8.0'`.
 
 ##### `node`
 
@@ -79,8 +79,8 @@ Create a `*-built` version of a tag for use in submodules.
 ##### `php`
 
 - Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
+- Accepts a string.
+- Defaults to `'8.0'`.
 
 ##### `node`
 
@@ -205,6 +205,12 @@ npm run build
 - Accepts a boolean.
 - Defaults to `true`.
 
+##### `working-directory`
+
+- Specify the working directory to use.
+- Accepts a string.
+- Defaults to the root of the repository.
+
 #### Usage
 
 ```yml
@@ -240,8 +246,8 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 ##### `php`
 
 - Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
+- Accepts a string.
+- Defaults to `'8.0'`.
 
 ##### `working-directory`
 
@@ -302,8 +308,8 @@ tests.
 ##### `php`
 
 - Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
+- Accepts a string.
+- Defaults to `'8.0'`.
 
 ##### `wordpress`
 
@@ -491,8 +497,8 @@ run your tests.
 ##### `php`
 
 - Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
+- Accepts a string.
+- Defaults to `'8.0'`.
 
 ##### `dependency-versions`
 
@@ -539,8 +545,8 @@ run your tests.
 ##### `php`
 
 - Specify the PHP version to use.
-- Accepts a number.
-- Defaults to `8.0`.
+- Accepts a string.
+- Defaults to `'8.0'`.
 
 ##### `dependency-versions`
 

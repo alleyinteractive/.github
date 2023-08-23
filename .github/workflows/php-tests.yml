@@ -65,6 +65,14 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - name: Setup Cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/test-cache
+          key: ${{ runner.os }}-composer-${{ inputs.php }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:

@@ -72,6 +72,8 @@ jobs:
             mv .distignore .gitignore
           fi
 
+          git ls-files -i -c --exclude-standard | xargs git rm --cached
+
           git checkout -b $BUILT_BRANCH
 
           git add -A && git commit -m "Changes from $GITHUB_SHA"

@@ -68,7 +68,7 @@ jobs:
       - name: Setup Cache
         uses: actions/cache@v3
         with:
-          path: /tmp/test-cache
+          path: ${{ env.CACHEDIR }}
           key: ${{ runner.os }}-composer-${{ inputs.php }}
           restore-keys: |
             ${{ runner.os }}-composer-

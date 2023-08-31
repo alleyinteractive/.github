@@ -69,8 +69,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHEDIR }}
-          key: ${{ runner.os }}-php-tests-${{ inputs.php }}
+          key: ${{ runner.os }}-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
           restore-keys: |
+            ${{ runner.os }}-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
             ${{ runner.os }}-php-tests-${{ inputs.php }}-
             ${{ runner.os }}-php-tests-
             ${{ runner.os }}-

@@ -73,8 +73,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
             ${{ runner.os }}-php-tests-${{ inputs.php }}-
-            ${{ runner.os }}-php-tests-
-            ${{ runner.os }}-
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

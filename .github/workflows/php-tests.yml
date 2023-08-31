@@ -71,7 +71,9 @@ jobs:
           path: ${{ env.CACHEDIR }}
           key: ${{ runner.os }}-composer-${{ inputs.php }}
           restore-keys: |
+            ${{ runner.os }}-composer-${{ inputs.php }}-
             ${{ runner.os }}-composer-
+            ${{ runner.os }}-
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

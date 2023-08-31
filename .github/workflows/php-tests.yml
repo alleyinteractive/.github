@@ -45,7 +45,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     name: "phpunit ${{ inputs.php }} - ${{ inputs.wordpress }} - ${{ inputs.os }} - multisite: ${{ inputs.multisite }}"
     env:
-      CACHEDIR: ~/.test-cache
+      CACHEDIR: /tmp/test-cache
       WP_CORE_DIR: /tmp/wordpress
       WP_VERSION: ${{ inputs.wordpress }}
       WP_DB_HOST: 127.0.0.1

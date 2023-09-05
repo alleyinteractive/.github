@@ -39,6 +39,7 @@ jobs:
   deploy:
     runs-on: ${{ inputs.os }}
     name: "Syncing ${{ inputs.base_directory }} to ${{ inputs.remote_repo }}@${REMOTE_BRANCH}: ${{ inputs.destination_directory }}"
+    timeout-minutes: 10
 
     env:
       GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/private_key

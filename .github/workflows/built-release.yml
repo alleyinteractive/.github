@@ -3,6 +3,11 @@ name: Built Release
 on:
   workflow_call:
     inputs:
+      draft:
+        description: 'Whether to create a draft release'
+        required: false
+        default: false
+        type: boolean
       node:
         default: 18
         required: false
@@ -87,6 +92,7 @@ jobs:
       - name: Push to release branch
         shell: bash
         env:
+          DRAFT_RELEASE: ${{ inputs.draft }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
@@ -115,4 +121,8 @@ jobs:
           git push origin --delete $RELEASE_BRANCH
 
           # Create the GitHub release
-          gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes -d --verify-tag --latest
+          if [[ $DRAFT_RELEASE == "true" ]]; then
+            gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes -d --verify-tag --latest
+          else
+            gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes --verify-tag --latest
+          fi

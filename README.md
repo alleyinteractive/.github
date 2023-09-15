@@ -20,7 +20,8 @@ The following workflows are available to use:
 
 - Built Branches/Tags and Other Deployment Workflows
   - [Built Branch](#built-branch)
-  - [Built Tag](#built-tag)
+  - [Built Releases](#built-releases)
+  - [Built Tag](#built-tag) (**⚠️ Deprecated**)
   - [Deploy to Remote Repository](#deploy-to-remote-repository)
 - Dependabot Management
   - [Dependabot Auto Merge](#dependabot-auto-merge)
@@ -68,7 +69,50 @@ jobs:
     uses: alleyinteractive/.github/.github/workflows/built-branch.yml@main
 ```
 
+### Built Releases
+
+Create built releases of a project based on the `composer.json`/`package.json`
+version constraint. When a the `version` field is updated in either file, the
+action will build the project, push a new tag up with the version, and create a
+release. Optionally, the release can be drafted or published.
+
+#### Inputs
+
+> Specify using `with` keyword.
+
+##### `draft`
+
+- Specify if the release should be drafted for a new release.
+- Accepts a boolean.
+- Defaults to `false`.
+
+##### `node`
+
+- Specify the Node version to use.
+- Will not build front-end assets if none are found.
+- Accepts a number.
+- Defaults to `18`.
+
+#### Usage
+
+```yml
+name: Built Release
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  built-asset:
+    uses: alleyinteractive/.github/.github/workflows/built-release.yml@main
+```
+
 ### Built Tag
+
+> ℹ️ Note: This action is deprecated in favor of the [Built Releases](#built-releases)
+> workflow. Built tags with the format of `v*.*.*-built` are not compatible with Composer
+> and should be avoided.
 
 Create a `*-built` version of a tag for use in submodules.
 
@@ -375,12 +419,19 @@ jobs:
 
 ### Deploy to Remote Repository
 
-Uses rsync and git to deploy files/folders from a local GitHub action repository to a remote repository.
+Uses rsync and git to deploy files/folders from a local GitHub action repository
+to a remote repository.
 
 _Notes_:
 
-- We do not leverage external actions to manage the SSH agent as we want to keep the code as simple/single-sourced as possible.
-- We must manually manage the SSH keys for the remote repository. This is typically done by adding the private key to the GitHub action secrets and then adding the public key to the remote repository (eg. as a write deploy key).
+- This workflow is [available as a standalone
+  action](https://github.com/alleyinteractive/action-deploy-to-remote-repository)
+  that can be used in a composite workflow with other custom steps.
+- We do not leverage external actions to manage the SSH agent as we want to keep
+  the code as simple/single-sourced as possible.
+- We must manually manage the SSH keys for the remote repository. This is
+  typically done by adding the private key to the GitHub action secrets and then
+  adding the public key to the remote repository (eg. as a write deploy key).
 
 #### Inputs
 
@@ -482,7 +533,7 @@ jobs:
 Run `phpstan` tests against your project. Assumes that `composer run phpstan` will
 run your tests.
 
-> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) action.
+> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) workflow.
 
 #### Inputs
 

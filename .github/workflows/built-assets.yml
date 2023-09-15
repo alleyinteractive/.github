@@ -52,9 +52,17 @@ jobs:
           echo "No paths were found in the pull request that match the paths to build."
           echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
 
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: PR contains built assets
+
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v3
-        if: steps.is-user-attempting-to-push-built-assets.outputs.is-user-attempting-to-push-built-assets == 'true'
+        if: steps.is-user-attempting-to-push-built-assets.outputs.is-user-attempting-to-push-built-assets == 'true' && steps.fc.outputs.comment-id == ''
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |

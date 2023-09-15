@@ -1,0 +1,92 @@
+name: Push built assets to a branch
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: 'The branch to push the built assets to.'
+        required: true
+        type: string
+      node:
+        default: 18
+        required: false
+        type: number
+      paths:
+        description: 'The paths to push to the branch.'
+        required: true
+        type: string
+
+jobs:
+  comment-on-pr:
+    name: Comment on PR
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      # Check if the user is attempting to push built assets up themselves.
+      - name: Check if the user is attempting to push built assets up themselves
+        shell: bash
+        id: is-user-attempting-to-push-built-assets
+        run: |
+          git diff --name-only HEAD^ HEAD | grep -qE "${{ github.event.inputs.paths }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v1
+        if: steps.is-user-attempting-to-push-built-assets.outputs.is-user-attempting-to-push-built-assets == 'true'
+        with:
+          issue-number: ${{ github.event.inputs.branch }}
+          body: |
+            ⚠️ This PR contains built assets for the `${{ github.event.inputs.branch }}` branch.
+
+  build-assets:
+    name: Built assets for ${{ github.event.inputs.branch }}
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if the plugin has front-end assets
+        shell: bash
+        id: has-node-assets
+        run: |
+          [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
+
+      - name: Setup Node
+        if: steps.has-node-assets.outputs.exists == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node }}
+
+      - name: Install node dependencies (npm ci)
+        if: steps.has-node-assets.outputs.exists == 'true'
+        run: npm install
+
+      - name: Run npm build
+        if: steps.has-node-assets.outputs.exists == 'true'
+        run: npm run build
+
+      - name: Check if there are any changes that should be pushed to the branch
+        shell: bash
+        id: has-changes
+        run: |
+          git diff --name-only HEAD^ HEAD | grep -qE "${{ github.event.inputs.paths }}" && echo "has-changes=true" >> $GITHUB_OUTPUT || echo "has-changes=false" >> $GITHUB_OUTPUT
+
+      - name: Push to branch
+        shell: bash
+        if: steps.has-changes.outputs.has-changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILT_BRANCH: '${{ inputs.branch }}'
+        run: |
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --global user.name "$GITHUB_ACTOR"
+
+          git ls-files -i -c --exclude-standard | xargs git rm --cached
+
+          git checkout -b $BUILT_BRANCH
+
+          git add -A && git commit -m "Changes from $GITHUB_SHA"
+          git push -u origin "${BUILT_BRANCH}"

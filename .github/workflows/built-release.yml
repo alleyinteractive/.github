@@ -66,6 +66,12 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Debug variables
+        run: |
+          echo "RELEASE_BRANCH=$RELEASE_BRANCH"
+          echo "VERSION_NAME=$VERSION_NAME"
+          echo "VERSION_TAG=$VERSION_TAG"
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -109,4 +115,4 @@ jobs:
           git push origin --delete $RELEASE_BRANCH
 
           # Create the GitHub release
-          gh release create $VERSION -t "Release $VERSION" --generate-notes -d --verify-tag --latest
+          gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes -d --verify-tag --latest

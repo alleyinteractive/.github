@@ -53,12 +53,12 @@ jobs:
           echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v3
         if: steps.is-user-attempting-to-push-built-assets.outputs.is-user-attempting-to-push-built-assets == 'true'
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ⚠️ This PR contains built assets for the `${{ github.event.inputs.branch }}` branch.
+            ⚠️ This PR contains built assets for the `${{ inputs.branch }}` branch. Built assets should not be pushed to the repository directly in pull requests. They will be automatically compiled and pushed to the branch when the pull request is merged.
 
   build-assets:
     name: Built assets for ${{ inputs.branch }}

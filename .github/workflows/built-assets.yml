@@ -14,8 +14,8 @@ on:
       paths:
         description: 'The paths to push to the branch.'
         default: |
-          client/build
           build
+          client/build
         required: false
         type: string
 
@@ -30,16 +30,27 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Convert the multline paths input into a single line that can be used in a grep
-        shell: bash
-        id: paths
-        run: echo "path=$(echo "${{ inputs.paths }}" | sed -e 's/ /|/g')" >> $GITHUB_OUTPUT
-
       - name: Check if the user is attempting to push any file in the pull request that matches the paths
         shell: bash
         id: is-user-attempting-to-push-built-assets
+        env:
+          BUILD_PATHS: ${{ inputs.paths }}
         run: |
-          git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} | grep -qE "${{ steps.paths.outputs.path }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
+          # Split the command string into an array by newline
+          set +e
+          IFS=$'\n' read -rd '' -a paths <<<"$BUILD_PATHS"
+          set -e
+
+          # Run each command in the array
+          for build_path in "${paths[@]}"; do
+            if git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} | grep -qE "$build_path"; then
+              echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          done
+
+          echo "No paths were found in the pull request that match the paths to build."
+          echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v1

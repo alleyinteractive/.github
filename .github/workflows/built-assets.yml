@@ -18,7 +18,7 @@ on:
 
 jobs:
   comment-on-pr:
-    name: Comment on PR
+    name: Comment on Pull Request if Built Assets are Pushed
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -30,11 +30,11 @@ jobs:
         id: paths
         run: echo "path=$(echo "${{ inputs.paths }}" | sed -e 's/ /|/g')" >> $GITHUB_OUTPUT
 
-      - name: Check if the user is attempting to push built assets up themselves
+      - name: Check if the user is attempting to push any file in the pull request that matches the paths
         shell: bash
         id: is-user-attempting-to-push-built-assets
         run: |
-          git diff --name-only HEAD^ HEAD | grep -qE "${{ steps.paths.outputs.path }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
+          git diff --name-only HEAD^..HEAD | grep -qE "${{ steps.paths.outputs.path }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v1
@@ -77,6 +77,7 @@ jobs:
         id: paths
         run: echo "path=$(echo "${{ inputs.paths }}" | sed -e 's/ /|/g')" >> $GITHUB_OUTPUT
 
+      # TODO Check again once comment on pr is worked out
       - name: Check if there are any changes in paths that should be pushed to the branch
         shell: bash
         id: has-changes

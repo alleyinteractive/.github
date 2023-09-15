@@ -28,14 +28,13 @@ jobs:
       - name: Convert the multline paths input into a single line that can be used in a grep
         shell: bash
         id: paths
-        run: |
-          echo "${{ inputs.paths }}" | sed -e 's/ /|/g' >> $GITHUB_OUTPUT
+        run: echo "path=$(echo "${{ inputs.paths }}" | sed -e 's/ /|/g')" >> $GITHUB_OUTPUT
 
       - name: Check if the user is attempting to push built assets up themselves
         shell: bash
         id: is-user-attempting-to-push-built-assets
         run: |
-          git diff --name-only HEAD^ HEAD | grep -qE "${{ steps.paths.outputs.stdout }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
+          git diff --name-only HEAD^ HEAD | grep -qE "${{ steps.paths.outputs.path }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v1
@@ -46,7 +45,7 @@ jobs:
             ⚠️ This PR contains built assets for the `${{ github.event.inputs.branch }}` branch.
 
   build-assets:
-    name: Built assets for ${{ github.event.inputs.branch }}
+    name: Built assets for ${{ inputs.branch }}
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -76,14 +75,13 @@ jobs:
       - name: Convert the multline paths input into a single line that can be used in a grep
         shell: bash
         id: paths
-        run: |
-          echo "${{ inputs.paths }}" | sed -e 's/ /|/g' >> $GITHUB_OUTPUT
+        run: echo "path=$(echo "${{ inputs.paths }}" | sed -e 's/ /|/g')" >> $GITHUB_OUTPUT
 
       - name: Check if there are any changes in paths that should be pushed to the branch
         shell: bash
         id: has-changes
         run: |
-          git diff --name-only HEAD^ HEAD | grep -qE "${{ steps.paths.outputs.stdout }}" && echo "has-changes=true" >> $GITHUB_OUTPUT || echo "has-changes=false" >> $GITHUB_OUTPUT
+          git diff --name-only HEAD^ HEAD | grep -qE "${{ steps.paths.outputs.path }}" && echo "has-changes=true" >> $GITHUB_OUTPUT || echo "has-changes=false" >> $GITHUB_OUTPUT
 
       - name: Push to branch
         shell: bash

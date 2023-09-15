@@ -34,7 +34,7 @@ jobs:
         shell: bash
         id: is-user-attempting-to-push-built-assets
         run: |
-          git diff --name-only HEAD^..HEAD | grep -qE "${{ steps.paths.outputs.path }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
+          git diff --name-only $GITHUB_BASE_REF..$GITHUB_HEAD_REF | grep -qE "${{ steps.paths.outputs.path }}" && echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT || echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v1

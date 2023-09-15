@@ -11,6 +11,11 @@ on:
 jobs:
   extract-version:
     runs-on: ubuntu-latest
+    outputs:
+      composer_version: ${{ steps.extract-version.outputs.composer_version }}
+      has_node_assets: ${{ steps.has_node_assets.outputs.exists }}
+      tag_exists: ${{ steps.check-tag.outputs.tag_exists }}
+      tag_name: ${{ steps.tag-name.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,12 +31,17 @@ jobs:
             echo "composer_version=$(cat composer.json | jq -r '.version')" >> $GITHUB_OUTPUT
           fi
 
+      - name: Compile the tag name from the version
+        id: tag-name
+        if: ${{ steps.extract-version.outputs.composer_version }} != 'false'
+        run: echo "tag_name=v${{ steps.extract-version.outputs.composer_version }}" >> $GITHUB_OUTPUT
+
       - name: Check if the version already exists as a tag
         id: check-tag
-        if: ${{ steps.extract-version.outputs.composer_version }} != 'false'
+        if: ${{ steps.tag-name.outputs.tag_name }}
         run: |
           # Check if the tag exists
-          if [ -z "$(git tag -l ${{ steps.extract-version.outputs.composer_version }})" ]; then
+          if [ -z "$(git tag -l ${{ steps.tag-name.outputs.tag_name }})" ]; then
             echo "tag_exists=false" >> $GITHUB_OUTPUT
           else
             echo "tag_exists=true" >> $GITHUB_OUTPUT
@@ -39,18 +49,13 @@ jobs:
 
       - name: Check if the plugin has front-end assets
         shell: bash
-        id: has-node-assets
+        id: has_node_assets
         run: |
           [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
 
-      - name: Compile the tag name from the version
-        id: tag-name
-        if: ${{ steps.extract-version.outputs.tag_exists }} == 'false' && ${{ steps.extract-version.outputs.composer_version }} != 'false'
-        run: echo "tag_name=v${{ steps.extract-version.outputs.composer_version }}" >> $GITHUB_OUTPUT
-
   build-and-release:
     needs: extract-version
-    if : ${{ needs.extract-version.outputs.tag_exists }} == 'false' && ${{ needs.extract-version.outputs.composer_version }} != 'false' && ${{ needs.extract-version.outputs.has-node-assets }} == 'true'
+    if : ${{ needs.extract-version.outputs.tag_exists }} == 'false' && ${{ needs.extract-version.outputs.composer_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true'
     runs-on: ubuntu-latest
     env:
       RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}"

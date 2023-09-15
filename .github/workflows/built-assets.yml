@@ -13,7 +13,10 @@ on:
         type: number
       paths:
         description: 'The paths to push to the branch.'
-        required: true
+        default: |
+          client/build
+          build
+        required: false
         type: string
 
 jobs:
@@ -42,7 +45,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1
         if: steps.is-user-attempting-to-push-built-assets.outputs.is-user-attempting-to-push-built-assets == 'true'
         with:
-          issue-number: ${{ github.event.inputs.branch }}
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             ⚠️ This PR contains built assets for the `${{ github.event.inputs.branch }}` branch.
 

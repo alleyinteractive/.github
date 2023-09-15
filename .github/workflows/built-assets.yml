@@ -36,21 +36,17 @@ jobs:
         env:
           BUILD_PATHS: ${{ inputs.paths }}
         run: |
-          # Split the command string into an array by newline
+          # Split the command string into an array by newline allowing errors
           set +e
           IFS=$'\n' read -rd '' -a paths <<<"$BUILD_PATHS"
           set -e
 
-          # Run each command in the array
           for build_path in "${paths[@]}"; do
             if git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} | grep -qE "$build_path"; then
               echo "is-user-attempting-to-push-built-assets=true" >> $GITHUB_OUTPUT
               exit 0
             fi
           done
-
-          echo "No paths were found in the pull request that match the paths to build."
-          echo "is-user-attempting-to-push-built-assets=false" >> $GITHUB_OUTPUT
 
       - name: Find Comment
         uses: peter-evans/find-comment@v1
@@ -98,27 +94,41 @@ jobs:
         if: steps.has-node-assets.outputs.exists == 'true'
         run: npm run build
 
-      - name: Convert the multline paths input into a single line that can be used in a grep
-        shell: bash
-        id: paths
-        run: echo "path=$(echo "${{ inputs.paths }}" | sed -e 's/ /|/g')" >> $GITHUB_OUTPUT
-
-      # TODO Check again once comment on pr is worked out
-      - name: Check if there are any changes in paths that should be pushed to the branch
-        shell: bash
-        id: has-changes
+      - name: Setup Git
+        if: steps.has-node-assets.outputs.exists == 'true'
         run: |
-          git diff --name-only HEAD^ HEAD | grep -qE "${{ steps.paths.outputs.path }}" && echo "has-changes=true" >> $GITHUB_OUTPUT || echo "has-changes=false" >> $GITHUB_OUTPUT
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --global user.name "$GITHUB_ACTOR"
+
+      - name: Add any of the paths if any of the paths to Git if they have changed
+        if: steps.has-node-assets.outputs.exists == 'true'
+        shell: bash
+        env:
+          BUILD_PATHS: ${{ inputs.paths }}
+        run: |
+          # Split the command string into an array by newline allowing errors
+          set +e
+          IFS=$'\n' read -rd '' -a paths <<<"$BUILD_PATHS"
+          set -e
+
+          for build_path in "${paths[@]}"; do
+            if git diff --name-only HEAD^ HEAD | grep -qE "$build_path"; then
+              git add "$build_path"
+            fi
+          done
 
       - name: Push to branch
         shell: bash
-        if: steps.has-changes.outputs.has-changes == 'true'
+        if: steps.has-node-assets.outputs.exists == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUILT_BRANCH: '${{ inputs.branch }}'
         run: |
-          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config --global user.name "$GITHUB_ACTOR"
+          # Check if any files have been added to the branch locally
+          if [[ -z $(git status -s) ]]; then
+            echo "No changes to the output on this push; exiting."
+            exit 0
+          fi
 
           git ls-files -i -c --exclude-standard | xargs git rm --cached
 

@@ -72,13 +72,13 @@ jobs:
 ### Built Releases
 
 Create built releases of a project based on the `composer.json`/`package.json`
-version constraint. When a the `version` field is updated in either file, the
+version constraint. When the `version` field is updated in either file, the
 action will build the project, push a new tag up with the version, and create a
 release. Optionally, the release can be drafted or published.
 
 The most common use of this workflow is for WordPress plugins or other packages
 that require built assets (such as ones from Webpack or Gulp) to be included to
-work but don't want to include those assets in version control.
+work but we don't want to include those assets in version control.
 
 #### Inputs
 

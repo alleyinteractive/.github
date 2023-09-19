@@ -153,7 +153,7 @@ jobs:
 
           # Create the GitHub release
           if [[ $DRAFT_RELEASE == "true" ]]; then
-            gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes -d --verify-tag --latest
+            gh release create $VERSION_TAG -t "$VERSION_TAG" --generate-notes -d --verify-tag --latest
           else
-            gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes --verify-tag --latest
+            gh release create $VERSION_TAG -t "$VERSION_TAG" --generate-notes --verify-tag --latest
           fi

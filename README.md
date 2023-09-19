@@ -71,9 +71,10 @@ jobs:
 
 ### Built Releases
 
-Create built releases of a project based on the `composer.json`/`package.json`
-version constraint. When the `version` field is updated in either file, the
-action will build the project, push a new tag up with the version, and create a
+Create built releases of a project based on the WordPress plugin `Stable Tag`
+header and falling back to the `version` property in either `composer.json` or
+`package.json`. When the version is updated in either file, the action
+will build the project, push a new tag up with the version, and create a
 release. Optionally, the release can be drafted or published.
 
 The most common use of this workflow is for WordPress plugins or other packages

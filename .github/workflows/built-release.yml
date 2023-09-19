@@ -59,6 +59,11 @@ jobs:
             fi
           fi
 
+          # Ignore the version if it's 0.0.0
+          if [ "$PACKAGE_VERSION" = "0.0.0" ]; then
+            PACKAGE_VERSION="null"
+          fi
+
           echo "PACKAGE_VERSION: $PACKAGE_VERSION"
 
           if [ $PACKAGE_VERSION = "null" ] || [ -z $PACKAGE_VERSION ]; then

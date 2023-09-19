@@ -86,7 +86,7 @@ jobs:
     if : ${{ needs.extract-version.outputs.tag_exists }} && ${{ needs.extract-version.outputs.package_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true' && ${{ github.repository }} != 'alleyinteractive/create-wordpress-plugin'
     runs-on: ubuntu-latest
     env:
-      RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}"
+      RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}-${{ github.run_number }}"
       VERSION_NAME: ${{ needs.extract-version.outputs.package_version }}
       VERSION_TAG: ${{ needs.extract-version.outputs.tag_name }}
     steps:

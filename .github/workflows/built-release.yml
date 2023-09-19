@@ -33,6 +33,8 @@ jobs:
           PACKAGE_VERSION="null"
           PLUGIN_NAME=$(basename $(pwd))
 
+          echo "PLUGIN_NAME: $PLUGIN_NAME"
+
           extract-version() {
             echo grep -iE "^\s\* Version:" "$1" | awk -F' ' '{print $NF}'
           }

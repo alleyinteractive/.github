@@ -21,7 +21,7 @@ jobs:
       package_version: ${{ steps.extract-version.outputs.package_version }}
       tag_exists: ${{ steps.check-tag.outputs.tag_exists }}
       tag_name: ${{ steps.tag-name.outputs.tag_name }}
-    if: ${{ github.repository }} != 'alleyinteractive/create-wordpress-plugin'
+    if: ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,9 +32,6 @@ jobs:
         run: |
           PACKAGE_VERSION="null"
           PLUGIN_NAME=$(basename $(pwd))
-
-          echo "REPOSITORY: ${{ github.action_repository }}"
-          echo "ACTION REPOSITORY: ${{ github.action_repository }}"
 
           extract-version() {
             grep -E "Version: [0-9]+\.[0-9]+\.[0-9]+" $1 | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" | head -1
@@ -94,7 +91,7 @@ jobs:
 
   build-and-release:
     needs: extract-version
-    if : ${{ needs.extract-version.outputs.tag_exists }} && ${{ needs.extract-version.outputs.package_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true' && ${{ github.repository }} != 'alleyinteractive/create-wordpress-plugin'
+    if : ${{ needs.extract-version.outputs.tag_exists }} && ${{ needs.extract-version.outputs.package_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true' && ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
     runs-on: ubuntu-latest
     env:
       RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}-${{ github.run_number }}"

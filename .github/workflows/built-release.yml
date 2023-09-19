@@ -33,6 +33,9 @@ jobs:
           PACKAGE_VERSION="null"
           PLUGIN_NAME=$(basename $(pwd))
 
+          echo "REPOSITORY: ${{ github.action_repository }}"
+          echo "ACTION REPOSITORY: ${{ github.action_repository }}"
+
           extract-version() {
             grep -E "Version: [0-9]+\.[0-9]+\.[0-9]+" $1 | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" | head -1
           }

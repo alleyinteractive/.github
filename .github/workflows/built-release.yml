@@ -1,0 +1,130 @@
+name: Built Release
+
+on:
+  workflow_call:
+    inputs:
+      draft:
+        description: 'Whether to create a draft release'
+        required: false
+        default: false
+        type: boolean
+      node:
+        default: 18
+        required: false
+        type: number
+
+jobs:
+  extract-version:
+    runs-on: ubuntu-latest
+    outputs:
+      has_node_assets: ${{ steps.has_node_assets.outputs.exists }}
+      package_version: ${{ steps.extract-version.outputs.package_version }}
+      tag_exists: ${{ steps.check-tag.outputs.tag_exists }}
+      tag_name: ${{ steps.tag-name.outputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Extract version
+        id: extract-version
+        run: |
+          # Check if the file exists
+          if [ -f composer.json ]; then
+            echo "package_version=$(cat composer.json | jq -r '.version')" >> $GITHUB_OUTPUT
+          elif [ -f package.json ]; then
+            echo "package_version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
+          else
+            echo "package_version=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Compile the tag name from the version
+        id: tag-name
+        if: ${{ steps.extract-version.outputs.package_version }} != 'false'
+        run: echo "tag_name=v${{ steps.extract-version.outputs.package_version }}" >> $GITHUB_OUTPUT
+
+      - name: Check if the version already exists as a tag
+        id: check-tag
+        if: ${{ steps.tag-name.outputs.tag_name }}
+        run: |
+          # Check if the tag exists
+          if [ -z "$(git tag -l ${{ steps.tag-name.outputs.tag_name }})" ]; then
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          else
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if the plugin has front-end assets
+        shell: bash
+        id: has_node_assets
+        run: |
+          [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
+
+  build-and-release:
+    needs: extract-version
+    if : ${{ needs.extract-version.outputs.tag_exists }} == 'false' && ${{ needs.extract-version.outputs.package_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true'
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}"
+      VERSION_NAME: ${{ needs.extract-version.outputs.package_version }}
+      VERSION_TAG: ${{ needs.extract-version.outputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Debug variables
+        run: |
+          echo "RELEASE_BRANCH=$RELEASE_BRANCH"
+          echo "VERSION_NAME=$VERSION_NAME"
+          echo "VERSION_TAG=$VERSION_TAG"
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node }}
+
+      - name: Install node dependencies
+        run: |
+          [ -f package-lock.json ] && npm ci || npm i
+
+      - name: Run npm build
+        run: npm run build
+
+      - name: Push to release branch
+        shell: bash
+        env:
+          DRAFT_RELEASE: ${{ inputs.draft }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --global user.name "$GITHUB_ACTOR"
+
+          rm -rf .gitignore docker_tag output.log .github
+
+          if [[ -e "$GITHUB_WORKSPACE/.deployignore" ]]; then
+            mv .deployignore .gitignore
+          elif [[ -e "$GITHUB_WORKSPACE/.distignore" ]]; then
+            mv .distignore .gitignore
+          fi
+
+          git ls-files -i -c --exclude-standard | xargs git rm --cached
+
+          git checkout -b $RELEASE_BRANCH
+
+          git add -A && git commit -m "Built changes for $VERSION_TAG"
+          git push --force -u origin "${RELEASE_BRANCH}"
+
+          # Create a tag from the release branch
+          git tag -a $VERSION_TAG -m "Release $VERSION_TAG"
+          git push origin $VERSION_TAG
+
+          # Delete the release branch
+          git push origin --delete $RELEASE_BRANCH
+
+          # Create the GitHub release
+          if [[ $DRAFT_RELEASE == "true" ]]; then
+            gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes -d --verify-tag --latest
+          else
+            gh release create $VERSION_TAG -t "Release $VERSION_TAG" --generate-notes --verify-tag --latest
+          fi

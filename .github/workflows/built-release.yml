@@ -29,13 +29,20 @@ jobs:
       - name: Extract version
         id: extract-version
         run: |
-          # Check if the file exists
+          PACKAGE_VERSION="null"
+
           if [ -f composer.json ]; then
-            echo "package_version=$(cat composer.json | jq -r '.version')" >> $GITHUB_OUTPUT
-          elif [ -f package.json ]; then
-            echo "package_version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
-          else
+            PACKAGE_VERSION=$(cat composer.json | jq -r '.version')
+          fi
+
+          if [ -f package.json ] && [ "$PACKAGE_VERSION" = "null" ]; then
+            PACKAGE_VERSION=$(cat package.json | jq -r '.version')
+          fi
+
+          if [ $PACKAGE_VERSION = "null" ]; then
             echo "package_version=false" >> $GITHUB_OUTPUT
+          else
+            echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
           fi
 
       - name: Compile the tag name from the version

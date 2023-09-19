@@ -33,16 +33,14 @@ jobs:
           PACKAGE_VERSION="null"
           PLUGIN_NAME=$(basename $(pwd))
 
-          echo "PLUGIN_NAME: $PLUGIN_NAME"
-
           extract-version() {
-            echo grep -iE "^\s\* Version:" "$1" | awk -F' ' '{print $NF}'
+            grep -E "Version: [0-9]+\.[0-9]+\.[0-9]+" $1 | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" | head -1
           }
 
           if [ -f "$PLUGIN_NAME.php" ]; then
             PACKAGE_VERSION=$(extract-version "$PLUGIN_NAME.php")
-          elif [ -f plugin.php ]; then
-            PACKAGE_VERSION=$(extract-version plugin.php)
+          elif [ -f "plugin.php" ]; then
+            PACKAGE_VERSION=$(extract-version "plugin.php")
           fi
 
           if [ -f composer.json ] && [ "$PACKAGE_VERSION" = "null" ]; then
@@ -52,6 +50,16 @@ jobs:
           if [ -f package.json ] && [ "$PACKAGE_VERSION" = "null" ]; then
             PACKAGE_VERSION=$(cat package.json | jq -r '.version')
           fi
+
+          # Validate that we have a semver version number
+          if [ "$PACKAGE_VERSION" != "null" ]; then
+            if ! [[ "$PACKAGE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+              echo "Invalid version number: $PACKAGE_VERSION"
+              exit 1
+            fi
+          fi
+
+          echo "PACKAGE_VERSION: $PACKAGE_VERSION"
 
           if [ $PACKAGE_VERSION = "null" ] || [ -z $PACKAGE_VERSION ]; then
             echo "package_version=false" >> $GITHUB_OUTPUT

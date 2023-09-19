@@ -39,7 +39,7 @@ jobs:
             PACKAGE_VERSION=$(cat package.json | jq -r '.version')
           fi
 
-          if [ $PACKAGE_VERSION = "null" ]; then
+          if [ $PACKAGE_VERSION = "null" ] || [ -z $PACKAGE_VERSION ]; then
             echo "package_version=false" >> $GITHUB_OUTPUT
           else
             echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT

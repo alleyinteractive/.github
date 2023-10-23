@@ -38,7 +38,7 @@ jobs:
           args: --prefer-dist --no-dev
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node }}
 

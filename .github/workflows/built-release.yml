@@ -124,7 +124,7 @@ jobs:
           echo "VERSION_TAG=$VERSION_TAG"
 
       - name: Install dependencies
-        if: ${{ COMPOSER_INSTALL }}
+        if: ${{ COMPOSER_INSTALL === true }}
         uses: php-actions/composer@v6
         with:
           php_version: ${{ inputs.php }}

@@ -8,6 +8,10 @@ on:
         required: false
         default: false
         type: boolean
+      php:
+        default: "8.1"
+        required: false
+        type: string
       node:
         default: 18
         required: false
@@ -112,6 +116,13 @@ jobs:
           echo "RELEASE_BRANCH=$RELEASE_BRANCH"
           echo "VERSION_NAME=$VERSION_NAME"
           echo "VERSION_TAG=$VERSION_TAG"
+
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: ${{ inputs.php }}
+          version: 2
+          args: --prefer-dist --no-dev
 
       - name: Setup Node
         uses: actions/setup-node@v4

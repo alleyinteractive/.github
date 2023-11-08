@@ -111,7 +111,6 @@ jobs:
       RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}-${{ github.run_number }}"
       VERSION_NAME: ${{ needs.extract-version.outputs.package_version }}
       VERSION_TAG: ${{ needs.extract-version.outputs.tag_name }}
-      COMPOSER_INSTALL: ${{ inputs.composer_install }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -124,7 +123,7 @@ jobs:
           echo "VERSION_TAG=$VERSION_TAG"
 
       - name: Install dependencies
-        if: ${{ COMPOSER_INSTALL == true }}
+        if: ${{ inputs.composer_install }}
         uses: php-actions/composer@v6
         with:
           php_version: ${{ inputs.php }}

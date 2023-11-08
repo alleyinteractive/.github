@@ -8,6 +8,15 @@ on:
         required: false
         default: false
         type: boolean
+      composer_install:
+        description: 'Whether or not to run composer install'
+        required: false
+        default: false
+        type: boolean
+      php:
+        default: "8.1"
+        required: false
+        type: string
       node:
         default: 18
         required: false
@@ -102,6 +111,7 @@ jobs:
       RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}-${{ github.run_number }}"
       VERSION_NAME: ${{ needs.extract-version.outputs.package_version }}
       VERSION_TAG: ${{ needs.extract-version.outputs.tag_name }}
+      COMPOSER_INSTALL: ${{ inputs.composer_install }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -112,6 +122,14 @@ jobs:
           echo "RELEASE_BRANCH=$RELEASE_BRANCH"
           echo "VERSION_NAME=$VERSION_NAME"
           echo "VERSION_TAG=$VERSION_TAG"
+
+      - name: Install dependencies
+        if: ${{ COMPOSER_INSTALL == true }}
+        uses: php-actions/composer@v6
+        with:
+          php_version: ${{ inputs.php }}
+          version: 2
+          args: --prefer-dist --no-dev
 
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -146,7 +146,7 @@ modified version of the [WordPress Coding
 Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/).
 
 One exception to this are unit tests which follow Alley Coding Standards but are
-stored in PSR-4-compliant file paths. For example, a class file created with a
+stored in [PSR-4-compliant file paths](https://www.php-fig.org/psr/psr-4/). For example, a class file created with a
 file path of `src/feature/class-example.php` would have a unit test located at
 `tests/Feature/ExampleTest.php`. Alley Coding Standards will be evolving to
 embrace PSR-4 in the future for more of the codebase, but for now, this exception

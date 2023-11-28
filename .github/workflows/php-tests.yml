@@ -12,7 +12,7 @@ on:
         required: false
         type: "string"
       php:
-        default: "8.0"
+        default: "8.1"
         required: false
         type: string
       os:

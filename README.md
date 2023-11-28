@@ -45,7 +45,7 @@ Create a `*-built` version of a branch for use in submodules.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.0'`.
+- Defaults to `'8.1'`.
 
 ##### `node`
 
@@ -129,7 +129,7 @@ Create a `*-built` version of a tag for use in submodules.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.0'`.
+- Defaults to `'8.1'`.
 
 ##### `node`
 
@@ -296,7 +296,7 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.0'`.
+- Defaults to `'8.1'`.
 
 ##### `working-directory`
 
@@ -358,7 +358,7 @@ tests.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.0'`.
+- Defaults to `'8.1'`.
 
 ##### `wordpress`
 
@@ -414,7 +414,7 @@ jobs:
   php-tests:
     strategy:
       matrix:
-        php: [8.0]
+        php: [8.1]
         wordpress: ["latest"]
     uses: alleyinteractive/.github/.github/workflows/php-tests.yml@main
     with:
@@ -554,7 +554,7 @@ run your tests.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.0'`.
+- Defaults to `'8.1'`.
 
 ##### `dependency-versions`
 
@@ -602,7 +602,7 @@ run your tests.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.0'`.
+- Defaults to `'8.1'`.
 
 ##### `dependency-versions`
 

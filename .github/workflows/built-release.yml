@@ -130,7 +130,7 @@ jobs:
   # For the *-built branch, build the assets and push them to the corresponding
   # built branch. For example, production would be the current branch and
   # production-built would be the built branch that gets pushed to.
-  build-branch:
+  build-branch-and-release:
     needs: extract-version
     if: ${{ needs.extract-version.outputs.is_built_branch }} == 'false' && ${{ needs.extract-version.outputs.package_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true' && ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
     runs-on: ubuntu-latest

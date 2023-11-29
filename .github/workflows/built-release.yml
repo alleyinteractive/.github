@@ -191,7 +191,7 @@ jobs:
 
           git checkout -b $BUILT_BRANCH
 
-          git add -A && git commit -m "Built changes from $CURRENT_BRANCH"
+          git add -A && git commit -m "Built changes from $CURRENT_BRANCH: $GITHUB_SHA"
           git push --force -u origin "${BUILT_BRANCH}"
 
       - name: Create tag and release for built branch

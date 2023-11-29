@@ -96,6 +96,7 @@ jobs:
         id: branch-name
 
       - name: Check if this is the built branch
+        if: ${{ steps.extract-version.outputs.package_version }} != 'false'
         id: is-built-branch
         shell: bash
         run: |
@@ -114,7 +115,7 @@ jobs:
 
       - name: Check if the version already exists as a tag
         id: check-tag
-        if: ${{ steps.tag-name.outputs.tag_name }}
+        if: ${{ steps.extract-version.outputs.package_version }} != 'false' && ${{ steps.tag-name.outputs.tag_name }}
         run: |
           echo "Checking tag: ${{ steps.tag-name.outputs.tag_name }}"
 
@@ -129,6 +130,7 @@ jobs:
 
       - name: Check if the plugin has front-end assets
         shell: bash
+        if: ${{ steps.extract-version.outputs.package_version }} != 'false'
         id: has_node_assets
         run: |
           [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT

@@ -137,6 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BUILT_BRANCH: '${{ needs.extract-version.outputs.branch }}-built'
+      CREATING_RELEASE: ${{ needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false' && 'true' || 'false' }}
       CURRENT_BRANCH: '${{ needs.extract-version.outputs.branch }}'
       VERSION_NAME: '${{ needs.extract-version.outputs.package_version }}'
       VERSION_TAG: '${{ needs.extract-version.outputs.tag_name }}'
@@ -186,7 +187,16 @@ jobs:
 
           git checkout -b $BUILT_BRANCH
 
-          git add -A && git commit -m "Built changes from $CURRENT_BRANCH: $GITHUB_SHA"
+          git add -A
+
+          echo "CREATING_RELEASE: $CREATING_RELEASE"
+
+          if [[ $CREATING_RELEASE == "true" ]]; then
+            git commit -m "Releasing $VERSION_TAG with built changes from $CURRENT_BRANCH $GITHUB_SHA"
+          else
+            git commit -m "Built changes from $CURRENT_BRANCH $GITHUB_SHA"
+          fi
+
           git push --force -u origin "${BUILT_BRANCH}"
 
       - name: Create tag and release for built branch

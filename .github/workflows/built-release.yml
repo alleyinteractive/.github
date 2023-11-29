@@ -37,7 +37,7 @@ jobs:
       package_version: ${{ steps.extract-version.outputs.package_version }}
       tag_exists: ${{ steps.check-tag.outputs.tag_exists }}
       tag_name: ${{ steps.tag-name.outputs.tag_name }}
-    if: ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
+    if: github.repository != 'alleyinteractive/create-wordpress-plugin'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,8 +95,7 @@ jobs:
         run: echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
         id: branch-name
 
-      - name: Check if this is the built branch
-        if: ${{ steps.extract-version.outputs.package_version != false }}
+      - name: Check if this is a built branch
         id: is-built-branch
         shell: bash
         run: |
@@ -110,12 +109,12 @@ jobs:
 
       - name: Compile the tag name from the version
         id: tag-name
-        if: ${{ steps.extract-version.outputs.package_version != false }}
+        if: steps.extract-version.outputs.package_version != 'false'
         run: echo "tag_name=v${{ steps.extract-version.outputs.package_version }}" >> $GITHUB_OUTPUT
 
       - name: Check if the version already exists as a tag
         id: check-tag
-        if: ${{ steps.extract-version.outputs.package_version != false }} && ${{ steps.tag-name.outputs.tag_name }}
+        if: steps.extract-version.outputs.package_version != 'false' && steps.tag-name.outputs.tag_name
         run: |
           echo "Checking tag: ${{ steps.tag-name.outputs.tag_name }}"
 
@@ -130,7 +129,7 @@ jobs:
 
       - name: Check if the plugin has front-end assets
         shell: bash
-        if: ${{ steps.extract-version.outputs.package_version }} != false
+        if: steps.extract-version.outputs.package_version != 'false'
         id: has_node_assets
         run: |
           [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
@@ -140,20 +139,20 @@ jobs:
   # production-built would be the built branch that gets pushed to.
   build-branch-and-release:
     needs: extract-version
-    if: ${{ needs.extract-version.outputs.is_built_branch == false }} && ${{ needs.extract-version.outputs.has_node_assets }} && ${{ needs.extract-version.outputs.branch != false }} && ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
+    if: needs.extract-version.outputs.is_built_branch == 'false' && needs.extract-version.outputs.has_node_assets == 'true' && needs.extract-version.outputs.branch != 'false' && github.repository != 'alleyinteractive/create-wordpress-plugin'
     runs-on: ubuntu-latest
     env:
       BUILT_BRANCH: '${{ needs.extract-version.outputs.branch }}-built'
-      CURRENT_BRANCH: ${{ needs.extract-version.outputs.branch }}
-      VERSION_NAME: ${{ needs.extract-version.outputs.package_version }}
-      VERSION_TAG: ${{ needs.extract-version.outputs.tag_name }}
+      CURRENT_BRANCH: '${{ needs.extract-version.outputs.branch }}'
+      VERSION_NAME: '${{ needs.extract-version.outputs.package_version }}'
+      VERSION_TAG: '${{ needs.extract-version.outputs.tag_name }}'
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
       - name: Install dependencies
-        if: ${{ inputs.composer_install }}
+        if: inputs.composer_install
         uses: php-actions/composer@v6
         with:
           php_version: ${{ inputs.php }}
@@ -197,7 +196,7 @@ jobs:
           git push --force -u origin "${BUILT_BRANCH}"
 
       - name: Create tag and release for built branch
-        if: ${{ needs.extract-version.outputs.tag_exists == false }}
+        if: needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -218,7 +217,7 @@ jobs:
   # and release that will be pushed to GitHub.
   # create-release:
   #   needs: extract-version
-  #   if: ${{ needs.extract-version.outputs.is_built_branch }} == true && ${{ needs.extract-version.outputs.tag_exists }} && ${{ needs.extract-version.outputs.package_version }} != false && ${{ needs.extract-version.outputs.has_node_assets }} == true && ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
+  #   if: ${{ needs.extract-version.outputs.is_built_branch }} == 'true' && ${{ needs.extract-version.outputs.tag_exists }} && ${{ needs.extract-version.outputs.package_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true' && ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
   #   runs-on: ubuntu-latest
   #   env:
   #     RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}-${{ github.run_number }}"

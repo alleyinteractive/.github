@@ -35,6 +35,7 @@ jobs:
       has_node_assets: ${{ steps.has_node_assets.outputs.exists }}
       is_built_branch: ${{ steps.is-built-branch.outputs.is_built_branch }}
       package_version: ${{ steps.extract-version.outputs.package_version }}
+      previous_tag_version: ${{ steps.previous-tag-version.outputs.previous_tag_version }}
       tag_exists: ${{ steps.check-tag.outputs.tag_exists }}
       tag_name: ${{ steps.tag-name.outputs.tag_name }}
     if: github.repository != 'alleyinteractive/create-wordpress-plugin'
@@ -121,6 +122,22 @@ jobs:
             echo "tag_exists=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Extract previous tag version
+        id: previous-tag-version
+        if: steps.check-tag.outputs.tag_exists == 'false' && steps.extract-version.outputs.package_version != 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the release tag for comparison using the gh release command
+          PREVIOUS_TAG=$(gh release list --limit 1 | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+" | head -1)
+
+          # If there is no previous tag, then we can't compare
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "previous_tag_version=false" >> $GITHUB_OUTPUT
+          else
+            echo "previous_tag_version=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          fi
+
       - name: Check if the project has front-end assets
         shell: bash
         id: has_node_assets
@@ -139,6 +156,7 @@ jobs:
       BUILT_BRANCH: '${{ needs.extract-version.outputs.branch }}-built'
       CREATING_RELEASE: ${{ needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false' && 'true' }}
       CURRENT_BRANCH: '${{ needs.extract-version.outputs.branch }}'
+      PREVIOUS_TAG_VERSION: '${{ needs.extract-version.outputs.previous_tag_version }}'
       VERSION_NAME: '${{ needs.extract-version.outputs.package_version }}'
       VERSION_TAG: '${{ needs.extract-version.outputs.tag_name }}'
     steps:
@@ -203,8 +221,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ $DRAFT_RELEASE == "true" ]]; then
-            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --latest
+          echo "PREVIOUS_TAG_VERSION: $PREVIOUS_TAG_VERSION"
+
+          if [ "$PREVIOUS_TAG_VERSION" == "false" ]; then
+            if [[ $DRAFT_RELEASE == "true" ]]; then
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --latest
+            else
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --latest
+            fi
           else
-            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --latest
+            if [[ $DRAFT_RELEASE == "true" ]]; then
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --latest --notes-start-tag "$PREVIOUS_TAG_VERSION"
+            else
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --latest --notes-start-tag "$PREVIOUS_TAG_VERSION"
+            fi
           fi

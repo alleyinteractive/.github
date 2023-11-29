@@ -131,6 +131,7 @@ jobs:
   # built branch. For example, production would be the current branch and
   # production-built would be the built branch that gets pushed to.
   build-branch-and-release:
+    name: Build assets and push to built branch
     needs: extract-version
     if: needs.extract-version.outputs.is_built_branch == 'false' && needs.extract-version.outputs.has_node_assets == 'true' && needs.extract-version.outputs.branch != 'false' && github.repository != 'alleyinteractive/create-wordpress-plugin'
     runs-on: ubuntu-latest
@@ -200,7 +201,7 @@ jobs:
 
           # Create the GitHub release
           if [[ $DRAFT_RELEASE == "true" ]]; then
-            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --verify-tag --latest
+            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --latest
           else
-            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --verify-tag --latest
+            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --latest
           fi

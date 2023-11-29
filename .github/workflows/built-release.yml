@@ -200,15 +200,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Creating tag $VERSION_TAG for $BUILT_BRANCH..."
-          git tag -a $VERSION_TAG -m "Release $VERSION_TAG" $BUILT_BRANCH
-          git push origin $VERSION_TAG
+          # echo "Creating tag $VERSION_TAG for $BUILT_BRANCH..."
+          # git tag -a $VERSION_TAG -m "Release $VERSION_TAG" $BUILT_BRANCH
+          # git push origin $VERSION_TAG
 
           # Create the GitHub release
           if [[ $DRAFT_RELEASE == "true" ]]; then
-            gh release create $VERSION_TAG -t "$VERSION_TAG" --generate-notes -d --verify-tag --latest
+            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --verify-tag --latest
           else
-            gh release create $VERSION_TAG -t "$VERSION_TAG" --generate-notes --verify-tag --latest
+            gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --verify-tag --latest
           fi
 
 

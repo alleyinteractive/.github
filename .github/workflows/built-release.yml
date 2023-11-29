@@ -127,9 +127,8 @@ jobs:
             echo "Tag exists!!"
           fi
 
-      - name: Check if the plugin has front-end assets
+      - name: Check if the project has front-end assets
         shell: bash
-        if: steps.extract-version.outputs.package_version != 'false'
         id: has_node_assets
         run: |
           [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT

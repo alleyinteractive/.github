@@ -13,7 +13,7 @@ on:
         required: false
         default: true
         type: boolean
-      npm_command:
+      cmd:
         description: 'The npm command to run that will build the assets'
         required: false
         default: 'build'
@@ -167,8 +167,8 @@ jobs:
         run: |
           [ -f package-lock.json ] && npm ci || npm i
 
-      - name: Run npm build
-        run: npm run ${{ inputs.npm_command }}
+      - name: Run npm command
+        run: npm run ${{ inputs.cmd }}
 
       - name: Push to ${{ needs.extract-version.outputs.branch }}-built branch
         shell: bash

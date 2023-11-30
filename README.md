@@ -72,7 +72,7 @@ jobs:
 ### Built Releases
 
 Create built releases of a project based on the WordPress plugin `Version`
-header in your main plugin file and then falls back to the `version` property in
+header in your main plugin file and then falling back to the `version` property in
 either `composer.json` or `package.json`. When the version is updated in either
 file, the action will build the project, push a new tag up with the version, and
 create a release. Optionally, the release can be drafted or published.

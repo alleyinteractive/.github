@@ -113,9 +113,6 @@ jobs:
         id: check-tag
         if: steps.extract-version.outputs.package_version != 'false' && steps.tag-name.outputs.tag_name
         run: |
-          echo "Checking tag: ${{ steps.tag-name.outputs.tag_name }}"
-
-          # Check if the tag exists
           if [ -z "$(git tag -l ${{ steps.tag-name.outputs.tag_name }})" ]; then
             echo "tag_exists=false" >> $GITHUB_OUTPUT
           else
@@ -221,8 +218,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "PREVIOUS_TAG_VERSION: $PREVIOUS_TAG_VERSION"
-
           if [ "$PREVIOUS_TAG_VERSION" == "false" ]; then
             if [[ $DRAFT_RELEASE == "true" ]]; then
               gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --latest

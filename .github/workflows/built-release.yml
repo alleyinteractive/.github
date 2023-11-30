@@ -11,8 +11,13 @@ on:
       composer_install:
         description: 'Whether or not to run composer install'
         required: false
-        default: false
+        default: true
         type: boolean
+      cmd:
+        description: 'The npm command to run that will build the assets'
+        required: false
+        default: 'build'
+        type: string
       php:
         default: "8.1"
         required: false
@@ -26,15 +31,18 @@ jobs:
   extract-version:
     runs-on: ubuntu-latest
     outputs:
+      branch: ${{ steps.branch-name.outputs.branch }}
       has_node_assets: ${{ steps.has_node_assets.outputs.exists }}
+      is_built_branch: ${{ steps.is-built-branch.outputs.is_built_branch }}
       package_version: ${{ steps.extract-version.outputs.package_version }}
+      previous_tag_version: ${{ steps.previous-tag-version.outputs.previous_tag_version }}
       tag_exists: ${{ steps.check-tag.outputs.tag_exists }}
       tag_name: ${{ steps.tag-name.outputs.tag_name }}
-    if: ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
+    if: github.repository != 'alleyinteractive/create-wordpress-plugin'
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Extract version
         id: extract-version
@@ -81,49 +89,77 @@ jobs:
             echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
           fi
 
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+        id: branch-name
+
+      - name: Check if this is a built branch
+        id: is-built-branch
+        shell: bash
+        run: |
+          if [[ ${{ steps.branch-name.outputs.branch }} =~ -built$ ]]; then
+            echo "is_built_branch=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_built_branch=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Compile the tag name from the version
         id: tag-name
-        if: ${{ steps.extract-version.outputs.package_version }} != 'false'
+        if: steps.extract-version.outputs.package_version != 'false'
         run: echo "tag_name=v${{ steps.extract-version.outputs.package_version }}" >> $GITHUB_OUTPUT
 
       - name: Check if the version already exists as a tag
         id: check-tag
-        if: ${{ steps.tag-name.outputs.tag_name }}
+        if: steps.extract-version.outputs.package_version != 'false' && steps.tag-name.outputs.tag_name
         run: |
-          # Check if the tag exists
           if [ -z "$(git tag -l ${{ steps.tag-name.outputs.tag_name }})" ]; then
             echo "tag_exists=false" >> $GITHUB_OUTPUT
           else
             echo "tag_exists=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check if the plugin has front-end assets
+      - name: Extract previous tag version
+        id: previous-tag-version
+        if: steps.check-tag.outputs.tag_exists == 'false' && steps.extract-version.outputs.package_version != 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the release tag for comparison using the gh release command
+          PREVIOUS_TAG=$(gh release list --limit 1 | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+" | head -1)
+
+          # If there is no previous tag, then we can't compare
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "previous_tag_version=false" >> $GITHUB_OUTPUT
+          else
+            echo "previous_tag_version=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if the project has front-end assets
         shell: bash
         id: has_node_assets
         run: |
           [[ -f package.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
 
-  build-and-release:
+  build-branch-and-release:
+    name: Build assets and push to built branch
     needs: extract-version
-    if : ${{ needs.extract-version.outputs.tag_exists }} && ${{ needs.extract-version.outputs.package_version }} != 'false' && ${{ needs.extract-version.outputs.has_node_assets }} == 'true' && ${{ github.repository != 'alleyinteractive/create-wordpress-plugin' }}
+    if: needs.extract-version.outputs.is_built_branch == 'false' && needs.extract-version.outputs.has_node_assets == 'true' && needs.extract-version.outputs.branch != 'false' && github.repository != 'alleyinteractive/create-wordpress-plugin'
     runs-on: ubuntu-latest
     env:
-      RELEASE_BRANCH: "release/${{ needs.extract-version.outputs.tag_name }}-${{ github.run_number }}"
-      VERSION_NAME: ${{ needs.extract-version.outputs.package_version }}
-      VERSION_TAG: ${{ needs.extract-version.outputs.tag_name }}
+      BUILT_BRANCH: '${{ needs.extract-version.outputs.branch }}-built'
+      CREATING_RELEASE: ${{ needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false' && 'true' }}
+      CURRENT_BRANCH: '${{ needs.extract-version.outputs.branch }}'
+      PREVIOUS_TAG_VERSION: '${{ needs.extract-version.outputs.previous_tag_version }}'
+      VERSION_NAME: '${{ needs.extract-version.outputs.package_version }}'
+      VERSION_TAG: '${{ needs.extract-version.outputs.tag_name }}'
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-
-      - name: Debug variables
-        run: |
-          echo "RELEASE_BRANCH=$RELEASE_BRANCH"
-          echo "VERSION_NAME=$VERSION_NAME"
-          echo "VERSION_TAG=$VERSION_TAG"
+          fetch-depth: 0
 
       - name: Install dependencies
-        if: ${{ inputs.composer_install }}
+        if: inputs.composer_install
         uses: php-actions/composer@v6
         with:
           php_version: ${{ inputs.php }}
@@ -139,13 +175,12 @@ jobs:
         run: |
           [ -f package-lock.json ] && npm ci || npm i
 
-      - name: Run npm build
-        run: npm run build
+      - name: Run npm command
+        run: npm run ${{ inputs.cmd }}
 
-      - name: Push to release branch
+      - name: Push to ${{ needs.extract-version.outputs.branch }}-built branch
         shell: bash
         env:
-          DRAFT_RELEASE: ${{ inputs.draft }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
@@ -153,6 +188,7 @@ jobs:
 
           rm -rf .gitignore docker_tag output.log .github
 
+          # Clear out the .gitignore file if .deployignore exists
           if [[ -e "$GITHUB_WORKSPACE/.deployignore" ]]; then
             mv .deployignore .gitignore
           elif [[ -e "$GITHUB_WORKSPACE/.distignore" ]]; then
@@ -161,21 +197,34 @@ jobs:
 
           git ls-files -i -c --exclude-standard | xargs git rm --cached
 
-          git checkout -b $RELEASE_BRANCH
+          git checkout -b $BUILT_BRANCH
 
-          git add -A && git commit -m "Built changes for $VERSION_TAG"
-          git push --force -u origin "${RELEASE_BRANCH}"
+          git add -A
 
-          # Create a tag from the release branch
-          git tag -a $VERSION_TAG -m "Release $VERSION_TAG"
-          git push origin $VERSION_TAG
-
-          # Delete the release branch
-          git push origin --delete $RELEASE_BRANCH
-
-          # Create the GitHub release
-          if [[ $DRAFT_RELEASE == "true" ]]; then
-            gh release create $VERSION_TAG -t "$VERSION_TAG" --generate-notes -d --verify-tag --latest
+          if [[ $CREATING_RELEASE == "true" ]]; then
+            git commit -m "Built changes for $VERSION_TAG from $CURRENT_BRANCH $GITHUB_SHA"
           else
-            gh release create $VERSION_TAG -t "$VERSION_TAG" --generate-notes --verify-tag --latest
+            git commit -m "Built changes from $CURRENT_BRANCH $GITHUB_SHA"
+          fi
+
+          git push --force -u origin "${BUILT_BRANCH}"
+
+      - name: Create release for built branch
+        if: needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$PREVIOUS_TAG_VERSION" == "false" ]; then
+            if [[ $DRAFT_RELEASE == "true" ]]; then
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --latest
+            else
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --latest
+            fi
+          else
+            if [[ $DRAFT_RELEASE == "true" ]]; then
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes -d --latest --notes-start-tag "$PREVIOUS_TAG_VERSION"
+            else
+              gh release create $VERSION_TAG --target "$BUILT_BRANCH" -t "$VERSION_TAG" --generate-notes --latest --notes-start-tag "$PREVIOUS_TAG_VERSION"
+            fi
           fi

@@ -71,15 +71,24 @@ jobs:
 
 ### Built Releases
 
-Create built releases of a project based on the WordPress plugin `Stable Tag`
-header and falling back to the `version` property in either `composer.json` or
-`package.json`. When the version is updated in either file, the action
-will build the project, push a new tag up with the version, and create a
-release. Optionally, the release can be drafted or published.
+Create built releases of a project based on the WordPress plugin `Version`
+header in your main plugin file and then falling back to the `version` property in
+either `composer.json` or `package.json`. When the version is updated in either
+file, the action will build the project, push a new tag up with the version, and
+create a release. Optionally, the release can be drafted or published.
 
 The most common use of this workflow is for WordPress plugins or other packages
 that require built assets (such as ones from Webpack or Gulp) to be included to
 work but we don't want to include those assets in version control.
+
+When the plugin's version is incremented on
+`alleyinteractive/create-wordpress-plugin`-based plugins via `npm run release`,
+the action will push a built version of the plugin to the `*-built` branch and
+then create a release with the built assets. If the plugin's version was not
+incremented, the action will still push the latest changes to the `*-built`
+branch but will not create a release. This does mirror the
+[Built Branch](#built-branch) workflow but is more flexible and allows for
+publishing releases.
 
 #### Inputs
 

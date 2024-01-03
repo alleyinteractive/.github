@@ -47,11 +47,13 @@ jobs:
       - name: Extract version
         id: extract-version
         run: |
-          PACKAGE_VERSION="null"
+          PACKAGE_VERSION=""
           PLUGIN_NAME=$(basename $(pwd))
 
+          echo "Using Plugin Name: $PLUGIN_NAME"
+
           extract-version() {
-            grep -E "Version: [0-9]+\.[0-9]+\.[0-9]+" $1 | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" | head -1
+            grep -E "Version:\s*[0-9]+\.[0-9]+\.[0-9]+" $1 | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" | head -1
           }
 
           if [ -f "$PLUGIN_NAME.php" ]; then
@@ -60,16 +62,24 @@ jobs:
             PACKAGE_VERSION=$(extract-version "plugin.php")
           fi
 
-          if [ -f composer.json ] && [ "$PACKAGE_VERSION" = "null" ]; then
+          if [ -f composer.json ] && [ -z "$PACKAGE_VERSION" ]; then
             PACKAGE_VERSION=$(cat composer.json | jq -r '.version')
+
+            if [ "$PACKAGE_VERSION" = "null" ]; then
+              PACKAGE_VERSION=""
+            fi
           fi
 
-          if [ -f package.json ] && [ "$PACKAGE_VERSION" = "null" ]; then
+          if [ -f package.json ] && [ -z "$PACKAGE_VERSION" ]; then
             PACKAGE_VERSION=$(cat package.json | jq -r '.version')
+
+            if [ "$PACKAGE_VERSION" = "null" ]; then
+              PACKAGE_VERSION=""
+            fi
           fi
 
           # Validate that we have a semver version number
-          if [ "$PACKAGE_VERSION" != "null" ]; then
+          if [ -n "$PACKAGE_VERSION" ]; then
             if ! [[ "$PACKAGE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
               echo "Invalid version number: $PACKAGE_VERSION"
               exit 1
@@ -78,16 +88,17 @@ jobs:
 
           # Ignore the version if it's 0.0.0
           if [ "$PACKAGE_VERSION" = "0.0.0" ]; then
-            PACKAGE_VERSION="null"
+            PACKAGE_VERSION=""
           fi
 
-          echo "PACKAGE_VERSION: $PACKAGE_VERSION"
+          echo "Package Version: $PACKAGE_VERSION"
 
-          if [ $PACKAGE_VERSION = "null" ] || [ -z $PACKAGE_VERSION ]; then
+          if [ -z $PACKAGE_VERSION ]; then
             echo "package_version=false" >> $GITHUB_OUTPUT
           else
             echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
           fi
+
 
       - name: Extract branch name
         shell: bash

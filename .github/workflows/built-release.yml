@@ -18,6 +18,11 @@ on:
         required: false
         default: 'build'
         type: string
+      github_token:
+        description: 'The GitHub token to use for the release'
+        required: false
+        default: ''
+        type: string
       php:
         default: "8.1"
         required: false
@@ -224,7 +229,8 @@ jobs:
         if: needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false'
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ inputs.github_token || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.github_token || secrets.GITHUB_TOKEN }}
         run: |
           if [ "$PREVIOUS_TAG_VERSION" == "false" ]; then
             if [[ $DRAFT_RELEASE == "true" ]]; then

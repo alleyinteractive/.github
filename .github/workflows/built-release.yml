@@ -143,7 +143,10 @@ jobs:
         if: steps.check-tag.outputs.tag_exists == 'false' && steps.extract-version.outputs.package_version != 'false'
         run: |
           # Get the release tag for comparison using the gh release command
-          PREVIOUS_TAG=$(gh release list --limit 1 | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+" | head -1)
+          # PREVIOUS_TAG=$(gh tag list --limit 1 | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+" | head -1)
+
+          # Testing out using git instead of gh command
+          PREVIOUS_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
 
           # If there is no previous tag, then we can't compare
           if [ -z "$PREVIOUS_TAG" ]; then

@@ -33,6 +33,7 @@ on:
 
 jobs:
   extract-version:
+    name: Extract version from plugin
     runs-on: ubuntu-latest
     outputs:
       branch: ${{ steps.branch-name.outputs.branch }}

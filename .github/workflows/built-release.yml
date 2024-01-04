@@ -203,7 +203,7 @@ jobs:
           git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config --global user.name "$GITHUB_ACTOR"
 
-          rm -rf .gitignore docker_tag output.log .github
+          rm -rf .gitignore docker_tag output.log
 
           # Clear out the .gitignore file if .deployignore exists
           if [[ -e "$GITHUB_WORKSPACE/.deployignore" ]]; then

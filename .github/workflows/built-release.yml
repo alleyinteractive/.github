@@ -28,7 +28,7 @@ on:
         type: number
     secrets:
       GH_TOKEN:
-        description: 'The GitHub token to use for the release'
+        description: 'The GitHub token to use for the release, defaults to the GITHUB_TOKEN'
         required: false
 
 jobs:
@@ -44,10 +44,13 @@ jobs:
       tag_exists: ${{ steps.check-tag.outputs.tag_exists }}
       tag_name: ${{ steps.tag-name.outputs.tag_name }}
     if: github.repository != 'alleyinteractive/create-wordpress-plugin'
+    env:
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN || github.token }}
 
       - name: Extract version
         id: extract-version
@@ -138,8 +141,6 @@ jobs:
       - name: Extract previous tag version
         id: previous-tag-version
         if: steps.check-tag.outputs.tag_exists == 'false' && steps.extract-version.outputs.package_version != 'false'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           # Get the release tag for comparison using the gh release command
           PREVIOUS_TAG=$(gh release list --limit 1 | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+" | head -1)
@@ -167,12 +168,14 @@ jobs:
       CREATING_RELEASE: ${{ needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false' && 'true' }}
       CURRENT_BRANCH: '${{ needs.extract-version.outputs.branch }}'
       PREVIOUS_TAG_VERSION: '${{ needs.extract-version.outputs.previous_tag_version }}'
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
       VERSION_NAME: '${{ needs.extract-version.outputs.package_version }}'
       VERSION_TAG: '${{ needs.extract-version.outputs.tag_name }}'
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN || github.token }}
 
       - name: Install dependencies
         if: inputs.composer_install
@@ -196,8 +199,6 @@ jobs:
 
       - name: Push to ${{ needs.extract-version.outputs.branch }}-built branch
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config --global user.name "$GITHUB_ACTOR"
@@ -228,8 +229,6 @@ jobs:
       - name: Create release for built branch
         if: needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false'
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           if [ "$PREVIOUS_TAG_VERSION" == "false" ]; then
             if [[ $DRAFT_RELEASE == "true" ]]; then

@@ -181,7 +181,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN || github.token }}
 
-      - name: Install dependencies
+      - name: Install Composer Dependencies
         if: inputs.composer_install
         uses: php-actions/composer@v6
         with:
@@ -195,7 +195,7 @@ jobs:
         with:
           node-version: ${{ inputs.node }}
 
-      - name: Install node dependencies
+      - name: Install Node dependencies
         if: needs.extract-version.outputs.has_node_assets == 'true'
         run: |
           [ -f package-lock.json ] && npm ci || npm i

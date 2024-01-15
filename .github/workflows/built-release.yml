@@ -201,6 +201,7 @@ jobs:
           [ -f package-lock.json ] && npm ci || npm i
 
       - name: Run npm command
+        if: needs.extract-version.outputs.has_node_assets == 'true'
         run: npm run ${{ inputs.cmd }}
 
       - name: Push to ${{ needs.extract-version.outputs.branch }}-built branch

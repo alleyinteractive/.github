@@ -164,14 +164,15 @@ jobs:
   build-branch-and-release:
     name: Build assets and push to built branch
     needs: extract-version
-    if: needs.extract-version.outputs.is_built_branch == 'false' && needs.extract-version.outputs.has_node_assets == 'true' && needs.extract-version.outputs.branch != 'false' && github.repository != 'alleyinteractive/create-wordpress-plugin'
+    if: needs.extract-version.outputs.is_built_branch == 'false' && needs.extract-version.outputs.branch != 'false' && github.repository != 'alleyinteractive/create-wordpress-plugin'
     runs-on: ubuntu-latest
     env:
       BUILT_BRANCH: '${{ needs.extract-version.outputs.branch }}-built'
       CREATING_RELEASE: ${{ needs.extract-version.outputs.package_version != 'false' && needs.extract-version.outputs.tag_exists == 'false' && 'true' }}
       CURRENT_BRANCH: '${{ needs.extract-version.outputs.branch }}'
-      PREVIOUS_TAG_VERSION: '${{ needs.extract-version.outputs.previous_tag_version }}'
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+      HAS_NODE_ASSETS: ${{ needs.extract-version.outputs.has_node_assets }}
+      PREVIOUS_TAG_VERSION: '${{ needs.extract-version.outputs.previous_tag_version }}'
       VERSION_NAME: '${{ needs.extract-version.outputs.package_version }}'
       VERSION_TAG: '${{ needs.extract-version.outputs.tag_name }}'
     steps:
@@ -189,11 +190,13 @@ jobs:
           args: --prefer-dist --no-dev
 
       - name: Setup Node
+        if: needs.extract-version.outputs.has_node_assets == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node }}
 
       - name: Install node dependencies
+        if: needs.extract-version.outputs.has_node_assets == 'true'
         run: |
           [ -f package-lock.json ] && npm ci || npm i
 

@@ -42,7 +42,7 @@ jobs:
     timeout-minutes: 10
     services:
       mysql:
-        image: ${{ inputs.database }}
+        image: ${{ inputs.database == 'false' && '' || inputs.database }}
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:

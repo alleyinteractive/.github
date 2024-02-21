@@ -11,6 +11,10 @@ on:
         default: "phpunit"
         required: false
         type: "string"
+      database:
+        default: "mysql:8.0"
+        required: false
+        type: "string"
       php:
         default: "8.1"
         required: false
@@ -38,7 +42,7 @@ jobs:
     timeout-minutes: 10
     services:
       mysql:
-        image: mysql:5.7
+        image: ${{ inputs.database }}
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:

@@ -311,7 +311,7 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 
 - Specify the database image to use.
 - Accepts a string.
-- Defaults to `'mysql:8.0'`. Can be disabled by setting it to `false`.
+- Defaults to `'mysql:8.0'`. Can be disabled by setting it to an empty string.
 
 ##### `working-directory`
 

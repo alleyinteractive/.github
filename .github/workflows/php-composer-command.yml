@@ -42,7 +42,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v3
         with:
           working-directory: ${{ inputs.working-directory }}
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"

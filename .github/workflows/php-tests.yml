@@ -70,14 +70,15 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Setup Cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CACHEDIR }}
-          key: ${{ runner.os }}-v3-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
-          restore-keys: |
-            ${{ runner.os }}-v3-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
-            ${{ runner.os }}-v3-php-tests-${{ inputs.php }}-
+      # TODO: Re-enable caching with https://github.com/alleyinteractive/.github/issues/73
+      # - name: Setup Cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ env.CACHEDIR }}
+      #     key: ${{ runner.os }}-v3-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-v3-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
+      #       ${{ runner.os }}-v3-php-tests-${{ inputs.php }}-
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

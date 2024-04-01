@@ -23,6 +23,10 @@ on:
         default: "ubuntu-latest"
         required: false
         type: string
+      object-cache:
+        default: ""
+        required: false
+        type: string
       dependency-versions:
         default: "locked"
         required: false
@@ -48,6 +52,18 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      # Include the below services conditionaly.
+      # The service will not start if the image is empty.
+      # See https://github.com/actions/runner/issues/822
+      redis:
+        image: ${{ ( inputs.object-cache == 'redis' ) && format('{0}:alpine', inputs.object-cache) || '' }}
+        ports:
+          - "6379:6379"
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+      memcached:
+        image: ${{ ( inputs.object-cache == 'memcached' ) && format('{0}:alpine', inputs.object-cache) || '' }}
+        ports:
+          - "11211:11211"
     name: "phpunit ${{ inputs.php }} - ${{ inputs.wordpress }} - ${{ inputs.os }} - multisite: ${{ inputs.multisite }}"
     env:
       CACHEDIR: /tmp/test-cache

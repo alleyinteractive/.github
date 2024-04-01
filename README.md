@@ -387,6 +387,12 @@ tests.
 - Accepts a boolean.
 - Defaults to `false`.
 
+##### `object-cache`
+
+- Specify the object to use.
+- Valid values are `memcached` or `redis`.
+- Defaults to not adding the service.
+
 #### `dependency-versions`
 
 - Allows you to select whether the job should install the locked, highest, or lowest versions of Composer dependencies.

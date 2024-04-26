@@ -15,6 +15,18 @@ on:
         default: true
         required: false
         type: boolean
+      create-env:
+        default: false
+        required: false
+        type: boolean
+      env-mode:
+        default: "test"
+        required: false
+        type: string
+      env-path:
+        default: "./"
+        required: false
+        type: string
       run-audit:
         default: false
         required: false
@@ -68,6 +80,13 @@ jobs:
         if: steps.has-node-assets.outputs.exists == 'true'
         run: |
           [[ -f package-lock.json ]] && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
+
+      - name: Create .env file
+        if: steps.has-node-assets.outputs.exists == 'true' && inputs.create-env
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: ${{ inputs.env-mode }}
+          path: ${{ inputs.env-path }}
 
       - name: Setup Node
         if: steps.has-node-assets.outputs.exists == 'true'

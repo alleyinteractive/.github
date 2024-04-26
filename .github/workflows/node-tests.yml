@@ -97,7 +97,7 @@ jobs:
         if: inputs.check-git-conflict
         shell: bash
         run: |
-          if [[ ! -z $(git grep -E "<<<<<<< |>>>>>>> " -- './*') ]]; then
+          if [[ ! -z $(git grep -E "<<<<<<< |>>>>>>> " -- './*' ':!buddy.yml' ':!.buddy/*') ]]; then
             echo "Git conflict found."
             exit 1
           fi

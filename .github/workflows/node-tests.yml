@@ -7,12 +7,40 @@ on:
         default: 16
         required: false
         type: number
+      npm:
+        default: 8
+        required: false
+        type: number
       ci:
         default: false
         required: false
         type: boolean
       cache:
         default: true
+        required: false
+        type: boolean
+      check-git-conflict:
+        default: true
+        required: false
+        type: boolean
+      check-gitignore:
+        default: true
+        required: false
+        type: boolean
+      create-env:
+        default: false
+        required: false
+        type: boolean
+      env-mode:
+        default: "test"
+        required: false
+        type: string
+      env-path:
+        default: "./"
+        required: false
+        type: string
+      install-npm:
+        default: false
         required: false
         type: boolean
       run-audit:
@@ -56,6 +84,31 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - name: Check for gitignored files
+        if: inputs.check-gitignore
+        shell: bash
+        run: |
+          if [[ ! -z $(git ls-files -i --exclude-standard) ]]; then
+            echo "Gitignored files found."
+            exit 1
+          fi
+
+      - name: Check for git conflicts
+        if: inputs.check-git-conflict
+        shell: bash
+        run: |
+          if [[ ! -z $(git grep -E "<<<<<<< |>>>>>>> " -- './*' ':!buddy.yml' ':!.buddy/*') ]]; then
+            echo "Git conflict found."
+            exit 1
+          fi
+
+      - name: Create .env file
+        if: inputs.create-env
+        uses: xom9ikk/dotenv@v2
+        with:
+          mode: ${{ inputs.env-mode }}
+          path: ${{ inputs.env-path }}
+
       - name: Check if the plugin has front-end assets
         shell: bash
         id: has-node-assets
@@ -75,6 +128,10 @@ jobs:
         with:
           cache: ${{ inputs.cache && steps.has-package-lock.outputs.exist == 'true' && inputs.cache || '' }}
           node-version: ${{ inputs.node }}
+
+      - name: Install npm
+        if: steps.has-node-assets.outputs.exists == 'true' && inputs.install-npm
+        run: npm install -g npm@${{ inputs.npm }}
 
       - name: Audit node
         if: steps.has-node-assets.outputs.exists == 'true' && inputs.run-audit

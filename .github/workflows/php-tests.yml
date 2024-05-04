@@ -43,6 +43,10 @@ on:
         default: ""
         required: false
         type: "string"
+      package-directory:
+        default: "plugins"
+        required: false
+        type: "string"
 
 jobs:
   test:
@@ -77,6 +81,7 @@ jobs:
       WP_DB_USER: root
       WP_DB_PASSWORD: '""'
       WP_MULTISITE: ${{ inputs.multisite == true && 1 || 0 }}
+      PACKAGE_DIRECTORY: ${{ inputs.test-suite == 'core-test-suite' && WP_CORE_DIR/inputs.package-directory || '' }}
 
     steps:
       - name: Cancel previous runs of this workflow (pull requests only)
@@ -109,10 +114,12 @@ jobs:
 
       - name: Setup WordPress with core test suite
         if: inputs.test-suite == 'core-test-suite'
+        shell: bash
         env:
           WP_INSTALL_CORE_TEST_SUITE: true
         run: |
           bash <(curl -s "https://raw.githubusercontent.com/alleyinteractive/mantle-ci/HEAD/install-wp-tests.sh") wordpress_unit_tests ${{ env.WP_DB_USER }} ${{ env.WP_DB_PASSWORD }} ${{ env.WP_DB_HOST }} ${{ env.WP_VERSION }} false false ${{ inputs.object-cache != '' && true || false }}
+          rsync -aWq --no-compress --exclude '.npm' --exclude '.git' --exclude ${WP_CORE_DIR} --exclude 'node_modules' . ${ env.PACKAGE_DIRECTORY }
 
       - name: Validate Composer
         run: composer validate
@@ -121,6 +128,7 @@ jobs:
         uses: ramsey/composer-install@v3
         if: inputs.action == 'install'
         with:
+          working-directory: ${{ inputs.test-suite == 'core-test-suite' && env.PACKAGE_DIRECTORY || '.'}}
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
 
@@ -134,4 +142,10 @@ jobs:
 
       - name: Test Package
         shell: bash
-        run: composer run ${{ inputs.command }}
+        run: |
+          # Cd into the test directory if test-suite is set to core-test-suite
+          if [ "${{ inputs.test-suite }}" == "core-test-suite" ]; then
+            cd ${{ env.PACKAGE_DIRECTORY }}
+          fi
+
+          composer run ${{ inputs.command }}

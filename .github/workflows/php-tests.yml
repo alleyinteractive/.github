@@ -119,7 +119,7 @@ jobs:
           WP_INSTALL_CORE_TEST_SUITE: true
         run: |
           bash <(curl -s "https://raw.githubusercontent.com/alleyinteractive/mantle-ci/HEAD/install-wp-tests.sh") wordpress_unit_tests ${{ env.WP_DB_USER }} ${{ env.WP_DB_PASSWORD }} ${{ env.WP_DB_HOST }} ${{ env.WP_VERSION }} false false ${{ inputs.object-cache != '' && true || false }}
-          rsync -aWq --no-compress --exclude '.npm' --exclude '.git' --exclude ${WP_CORE_DIR} --exclude 'node_modules' . ${ env.PACKAGE_DIRECTORY }
+          rsync -aWq --no-compress --exclude '.npm' --exclude '.git' --exclude ${WP_CORE_DIR} --exclude 'node_modules' . ${PACKAGE_DIRECTORY}
 
       - name: Validate Composer
         run: composer validate
@@ -145,7 +145,7 @@ jobs:
         run: |
           # Cd into the test directory if test-suite is set to core-test-suite
           if [ "${{ inputs.test-suite }}" == "core-test-suite" ]; then
-            cd ${{ env.PACKAGE_DIRECTORY }}
+            cd ${PACKAGE_DIRECTORY}
           fi
 
           composer run ${{ inputs.command }}

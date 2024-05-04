@@ -45,7 +45,7 @@ Create a `*-built` version of a branch for use in submodules.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.1'`.
+- Defaults to `8.1`.
 
 ##### `node`
 
@@ -138,7 +138,7 @@ Create a `*-built` version of a tag for use in submodules.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.1'`.
+- Defaults to `8.1`.
 
 ##### `node`
 
@@ -305,7 +305,7 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.1'`.
+- Defaults to `8.1`.
 
 ##### `database`
 
@@ -373,7 +373,7 @@ tests.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.1'`.
+- Defaults to `8.1`.
 
 ##### `wordpress`
 
@@ -387,6 +387,12 @@ tests.
 - Accepts a boolean.
 - Defaults to `false`.
 
+##### `database`
+
+- Specify the database image to use.
+- Accepts a string.
+- Defaults to `mysql:8.0`. Can be disabled by setting it to an empty string.
+
 ##### `object-cache`
 
 - Specify the object to use.
@@ -398,6 +404,12 @@ tests.
 - Allows you to select whether the job should install the locked, highest, or lowest versions of Composer dependencies.
 - Valid values are `locked`, `highest`, or `lowest`.
 - Defaults to `locked`.
+
+##### `test-suite`
+
+- Specify the core test suite.
+- Valid values are `core-test-suite`.
+- Defaults to not adding a core test suite. (Usually Mantle.)
 
 #### Usage
 
@@ -575,7 +587,7 @@ run your tests.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.1'`.
+- Defaults to `8.1`.
 
 ##### `dependency-versions`
 
@@ -623,7 +635,7 @@ run your tests.
 
 - Specify the PHP version to use.
 - Accepts a string.
-- Defaults to `'8.1'`.
+- Defaults to `8.1`.
 
 ##### `dependency-versions`
 

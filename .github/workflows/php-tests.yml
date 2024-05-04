@@ -11,26 +11,14 @@ on:
         default: "phpunit"
         required: false
         type: "string"
-      database:
-        default: "mysql:8.0"
-        required: false
-        type: "string"
-      php:
-        default: "8.1"
-        required: false
-        type: string
       os:
         default: "ubuntu-latest"
         required: false
         type: string
-      object-cache:
-        default: ""
+      php:
+        default: "8.1"
         required: false
         type: string
-      dependency-versions:
-        default: "locked"
-        required: false
-        type: "string"
       wordpress:
         default: "latest"
         required: false
@@ -39,6 +27,22 @@ on:
         default: false
         required: false
         type: boolean
+      database:
+        default: "mysql:8.0"
+        required: false
+        type: "string"
+      object-cache:
+        default: ""
+        required: false
+        type: string
+      dependency-versions:
+        default: "locked"
+        required: false
+        type: "string"
+      test-suite:
+        default: ""
+        required: false
+        type: "string"
 
 jobs:
   test:
@@ -102,6 +106,13 @@ jobs:
           extensions: apc, dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd
           tools: composer:v2
           coverage: none
+
+      - name: Setup WordPress with core test suite
+        if: inputs.test-suite == 'core-test-suite'
+        env:
+          WP_INSTALL_CORE_TEST_SUITE: true
+        run: |
+          bash <(curl -s "https://raw.githubusercontent.com/alleyinteractive/mantle-ci/HEAD/install-wp-tests.sh") wordpress_unit_tests ${{ env.WP_DB_USER }} ${{ env.WP_DB_PASSWORD }} ${{ env.WP_DB_HOST }} ${{ env.WP_VERSION }} false false ${{ inputs.object-cache != '' && true || false }}
 
       - name: Validate Composer
         run: composer validate

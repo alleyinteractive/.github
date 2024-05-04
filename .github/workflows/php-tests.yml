@@ -81,7 +81,7 @@ jobs:
       WP_DB_USER: root
       WP_DB_PASSWORD: '""'
       WP_MULTISITE: ${{ inputs.multisite == true && 1 || 0 }}
-      PACKAGE_DIRECTORY: ${{ inputs.test-suite == 'core-test-suite' && format('{0}/wp-content/{1}/', WP_CORE_DIR, inputs.package-directory) || '.' }}
+      PACKAGE_DIRECTORY: ${{ inputs.test-suite == 'core-test-suite' && format('{0}/wp-content/{1}/', env.WP_CORE_DIR, inputs.package-directory) || '.' }}
 
     steps:
       - name: Cancel previous runs of this workflow (pull requests only)

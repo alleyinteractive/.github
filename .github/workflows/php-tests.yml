@@ -44,7 +44,7 @@ on:
         required: false
         type: "string"
       working-directory:
-        default: ""
+        default: "."
         required: false
         type: "string"
 
@@ -78,11 +78,12 @@ jobs:
       WP_CORE_DIR: /tmp/wordpress
       WP_TESTS_DIR: /tmp/wordpress-tests-lib
       WP_VERSION: ${{ inputs.wordpress }}
+      INSTALL_WP_TEST_DEBUG: true
       WP_DB_HOST: 127.0.0.1
       WP_DB_USER: root
       WP_DB_PASSWORD: '""'
       WP_MULTISITE: ${{ inputs.multisite == true && 1 || 0 }}
-      PACKAGE_DIRECTORY: ${{ inputs.install-core-tests == true && format('{0}/wp-content/{1}/', '/tmp/wordpress', inputs.working-directory) || '.' }}
+      PACKAGE_DIRECTORY: ${{ inputs.install-core-tests == true && format('{0}/wp-content/{1}/', '/tmp/wordpress', inputs.working-directory) || inputs.working-directory }}
     steps:
       - name: Cancel previous runs of this workflow (pull requests only)
         if: github.event_name == 'pull_request'

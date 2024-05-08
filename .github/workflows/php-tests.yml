@@ -39,11 +39,11 @@ on:
         default: "locked"
         required: false
         type: "string"
-      test-suite:
-        default: ""
+      install-core-tests:
+        default: false
         required: false
         type: "string"
-      package-directory:
+      working-directory:
         default: ""
         required: false
         type: "string"
@@ -83,8 +83,7 @@ jobs:
       WP_DB_USER: root
       WP_DB_PASSWORD: '""'
       WP_MULTISITE: ${{ inputs.multisite == true && 1 || 0 }}
-      PACKAGE_DIRECTORY: ${{ inputs.test-suite == 'core-test-suite' && format('{0}/wp-content/{1}/', '/tmp/wordpress', inputs.package-directory) || '.' }}
-
+      PACKAGE_DIRECTORY: ${{ inputs.install-core-tests == true && format('{0}/wp-content/{1}/', '/tmp/wordpress', inputs.working-directory) || '.' }
     steps:
       - name: Cancel previous runs of this workflow (pull requests only)
         if: github.event_name == 'pull_request'
@@ -115,12 +114,12 @@ jobs:
           coverage: none
 
       - name: Setup WordPress with core test suite
-        if: inputs.test-suite == 'core-test-suite'
+        if: inputs.install-core-tests == true
         shell: bash
         env:
           WP_INSTALL_CORE_TEST_SUITE: true
         run: |
-          bash <(curl -s "https://raw.githubusercontent.com/alleyinteractive/mantle-ci/HEAD/install-wp-tests.sh") wordpress_unit_tests ${{ env.WP_DB_USER }} ${{ env.WP_DB_PASSWORD }} ${{ env.WP_DB_HOST }} ${{ env.WP_VERSION }} false false ${{ inputs.object-cache != '' && true || false }}
+          bash <(curl -s "https://raw.githubusercontent.com/alleyinteractive/mantle-ci/HEAD/install-wp-tests.sh") wordpress_unit_tests ${{ env.WP_DB_USER }} ${{ env.WP_DB_PASSWORD }} ${{ env.WP_DB_HOST }} ${{ env.WP_VERSION }} false false ${{ inputs.object-cache }}
           rsync -aWq --no-compress --exclude '.npm' --exclude '.git' --exclude ${WP_CORE_DIR} --exclude 'node_modules' . ${PACKAGE_DIRECTORY}
 
       - name: Validate Composer
@@ -130,7 +129,7 @@ jobs:
         uses: ramsey/composer-install@v3
         if: inputs.action == 'install'
         with:
-          working-directory: ${{ inputs.test-suite == 'core-test-suite' && env.PACKAGE_DIRECTORY || '.'}}
+          working-directory: ${{ env.PACKAGE_DIRECTORY }}
           composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
           dependency-versions: ${{ inputs.dependency-versions }}
 
@@ -140,14 +139,9 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --prefer-dist --no-interaction
+          shell: bash
+          command: composer update --prefer-dist --no-interaction --working-dir=${PACKAGE_DIRECTORY}
 
       - name: Test Package
         shell: bash
-        run: |
-          # Cd into the test directory if test-suite is set to core-test-suite
-          if [ "${{ inputs.test-suite }}" == "core-test-suite" ]; then
-            cd ${PACKAGE_DIRECTORY}
-          fi
-
-          composer run ${{ inputs.command }}
+        run: composer run ${{ inputs.command }} --working-dir=${PACKAGE_DIRECTORY}

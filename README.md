@@ -405,11 +405,17 @@ tests.
 - Valid values are `locked`, `highest`, or `lowest`.
 - Defaults to `locked`.
 
-##### `test-suite`
+##### `install-core-tests`
 
-- Specify the core test suite.
-- Valid values are `core-test-suite`.
-- Defaults to not adding a core test suite. (Usually Mantle.)
+- Flag if the WordPress core test suite should be installed.
+- Accepts a boolean.
+- Defaults to `false`
+
+##### `working-directory`
+
+- Specify the working directory to use.
+- Accepts a string.
+- Defaults to the root of the repository.
 
 #### Usage
 

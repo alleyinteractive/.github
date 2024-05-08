@@ -77,7 +77,6 @@ jobs:
       CACHEDIR: /tmp/test-cache
       WP_CORE_DIR: /tmp/wordpress
       WP_TESTS_DIR: /tmp/wordpress-tests-lib
-      INSTALL_WP_TEST_DEBUG: true
       WP_VERSION: ${{ inputs.wordpress }}
       WP_DB_HOST: 127.0.0.1
       WP_DB_USER: root

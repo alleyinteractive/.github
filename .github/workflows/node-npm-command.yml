@@ -1,0 +1,52 @@
+name: Run Node Command
+
+on:
+  workflow_call:
+    inputs:
+      node:
+        default: 'lts/*'  # Targets the latest LTS version of Node.js by default
+        required: false
+        type: string
+      npm:
+        default: 'latest'  # Targets the latest version of npm by default
+        required: false
+        type: string
+      command:
+        required: true
+        type: string
+      timeout-minutes:
+        default: 5
+        required: false
+        type: number
+      working-directory:
+        default: "."
+        required: false
+        type: "string"
+
+jobs:
+  node-tests:
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    name: Install and run ${{ inputs.command }}
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node }}
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Install npm
+        run: npm install -g npm@${{ inputs.npm }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run command
+        run: npm run ${{ inputs.command }}

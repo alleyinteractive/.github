@@ -47,6 +47,10 @@ on:
         default: "."
         required: false
         type: "string"
+      checkout:
+        default: true
+        required: false
+        type: boolean
 
 jobs:
   test:
@@ -91,6 +95,7 @@ jobs:
           access_token: ${{ github.token }}
 
       - name: Checkout code
+        if: inputs.checkout == true
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'

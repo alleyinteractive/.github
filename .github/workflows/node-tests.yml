@@ -63,6 +63,10 @@ on:
         default: "."
         required: false
         type: "string"
+      checkout:
+        default: true
+        required: false
+        type: boolean
 
 jobs:
   node-tests:
@@ -80,6 +84,7 @@ jobs:
           access_token: ${{ github.token }}
 
       - name: Checkout code
+        if: inputs.checkout == true
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
@@ -109,7 +114,7 @@ jobs:
           mode: ${{ inputs.env-mode }}
           path: ${{ inputs.env-path }}
 
-      - name: Check if the plugin has front-end assets
+     - - name: Check if the plugin has front-end assets
         shell: bash
         id: has-node-assets
         run: |

@@ -20,7 +20,7 @@ The following workflows are available to use:
 
 - Built Branches/Tags and Other Deployment Workflows
   - [Built Branch](#built-branch)
-  - [Built Releases](#built-releases)
+  - [Built Releases](#built-releases) (**⚠️ Deprecated**)
   - [Built Tag](#built-tag) (**⚠️ Deprecated**)
   - [Deploy to Remote Repository](#deploy-to-remote-repository)
 - Dependabot Management
@@ -70,6 +70,8 @@ jobs:
 ```
 
 ### Built Releases
+
+> ℹ️ Note: This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
 
 Create built releases of a project based on the WordPress plugin `Version`
 header in your main plugin file and then falling back to the `version` property in
@@ -124,8 +126,8 @@ jobs:
 
 ### Built Tag
 
-> ℹ️ Note: This action is deprecated in favor of the [Built Releases](#built-releases)
-> workflow. Built tags with the format of `v*.*.*-built` are not compatible with Composer
+> ℹ️ Note: This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
+> Built tags with the format of `v*.*.*-built` are not compatible with Composer
 > and should be avoided.
 
 Create a `*-built` version of a tag for use in submodules.

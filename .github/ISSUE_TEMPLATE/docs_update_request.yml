@@ -1,5 +1,6 @@
 name: Documentation Update
 description: "Report something in the project documentation that is incorrect or otherwise inaccurate."
+type: Task
 labels: ["documentation"]
 body:
   - type: markdown

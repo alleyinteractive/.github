@@ -1,6 +1,7 @@
 name: Bug Report
 description: "Report something that's broken or otherwise not working as expected."
 type: Bug
+projects: ["alleyinteractive/4"]
 body:
   - type: markdown
     attributes:

@@ -1,6 +1,7 @@
 name: Feature or Enhancement Request
 description: Request a new feature or enhancement
 type: Feature
+projects: ["alleyinteractive/4"]
 body:
   - type: markdown
     attributes:

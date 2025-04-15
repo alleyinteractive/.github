@@ -2,6 +2,7 @@ name: For Discussion
 description: Open a topic for discussion
 type: Feature
 labels: ["discussion"]
+projects: ["alleyinteractive/4"]
 body:
   - type: markdown
     attributes:

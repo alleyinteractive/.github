@@ -211,6 +211,8 @@ jobs:
 Run automated Node tests against your repository. Assumes that your plugin will
 have the following commands available to it:
 
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-node](https://github.com/alleyinteractive/action-test-node).
+
 ```sh
 npm run lint
 npm run test
@@ -290,6 +292,8 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 <command>` will run your tests. Supports multiple commands with a multi-line
 `command` input.
 
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
+
 > Note: This workflow does not setup MySQL for testing. Use the
 > [PHP Tests with MySQL](#php-tests-with-mysql) workflow for that.
 
@@ -348,6 +352,8 @@ jobs:
 Run PHPUnit tests against your project. Installs and configures MySQL for
 WordPress unit testing. Assumes that `composer run phpunit` will run your unit
 tests.
+
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 
@@ -468,6 +474,8 @@ jobs:
 Uses rsync and git to deploy files/folders from a local GitHub action repository
 to a remote repository.
 
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-deploy-to-remote-repository](https://github.com/alleyinteractive/action-deploy-to-remote-repository).
+
 _Notes_:
 
 - This workflow is [available as a standalone
@@ -579,7 +587,7 @@ jobs:
 Run `phpstan` tests against your project. Assumes that `composer run phpstan` will
 run your tests.
 
-> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) workflow.
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 
@@ -633,7 +641,7 @@ jobs:
 Run `phpcs` tests against your project. Assumes that `composer run phpcs` will
 run your tests.
 
-> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) action.
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 

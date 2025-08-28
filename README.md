@@ -292,6 +292,8 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 <command>` will run your tests. Supports multiple commands with a multi-line
 `command` input.
 
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
+
 > Note: This workflow does not setup MySQL for testing. Use the
 > [PHP Tests with MySQL](#php-tests-with-mysql) workflow for that.
 
@@ -471,6 +473,8 @@ jobs:
 
 Uses rsync and git to deploy files/folders from a local GitHub action repository
 to a remote repository.
+
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-deploy-to-remote-repository](https://github.com/alleyinteractive/action-deploy-to-remote-repository).
 
 _Notes_:
 

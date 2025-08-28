@@ -18,14 +18,18 @@ continuous integration tests with Github Actions.
 
 The following workflows are available to use:
 
-- Built Branches/Tags and Other Deployment Workflows
-  - [Built Branch](#built-branch)
-  - [Built Releases](#built-releases) (**⚠️ Deprecated**)
-  - [Built Tag](#built-tag) (**⚠️ Deprecated**)
-  - [Deploy to Remote Repository](#deploy-to-remote-repository)
 - Dependabot Management
   - [Dependabot Auto Merge](#dependabot-auto-merge)
   - [Dependabot Auto Approve](#dependabot-auto-approve)
+
+The following are **deprecated workflows** that have been replaced with standalone
+actions. They should not be used for new projects.
+
+- Built Branches/Tags and Other Deployment Workflows
+  - [Built Branch](#built-branch)
+  - [Built Releases](#built-releases)
+  - [Built Tag](#built-tag)
+  - [Deploy to Remote Repository](#deploy-to-remote-repository)
 - Testing Workflows
   - [Node Tests](#node-tests)
   - [PHP Composer Script](#php-composer-script)

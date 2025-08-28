@@ -211,6 +211,8 @@ jobs:
 Run automated Node tests against your repository. Assumes that your plugin will
 have the following commands available to it:
 
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-node](https://github.com/alleyinteractive/action-test-node).
+
 ```sh
 npm run lint
 npm run test
@@ -348,6 +350,8 @@ jobs:
 Run PHPUnit tests against your project. Installs and configures MySQL for
 WordPress unit testing. Assumes that `composer run phpunit` will run your unit
 tests.
+
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 
@@ -579,7 +583,7 @@ jobs:
 Run `phpstan` tests against your project. Assumes that `composer run phpstan` will
 run your tests.
 
-> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) workflow.
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 
@@ -633,7 +637,7 @@ jobs:
 Run `phpcs` tests against your project. Assumes that `composer run phpcs` will
 run your tests.
 
-> ℹ️ Note: This action is deprecated in favor of the [PHP Composer Script](#php-composer-script) action.
+> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 

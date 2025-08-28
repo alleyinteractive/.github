@@ -39,6 +39,8 @@ actions. They should not be used for new projects.
 
 ### Built Branch
 
+> ℹ️ Note: This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
+
 Create a `*-built` version of a branch for use in submodules.
 
 #### Inputs

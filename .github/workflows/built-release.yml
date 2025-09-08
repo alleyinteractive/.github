@@ -188,7 +188,7 @@ jobs:
 
       - name: Setup Node
         if: needs.extract-version.outputs.has_node_assets == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ inputs.node }}
 

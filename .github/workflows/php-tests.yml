@@ -84,6 +84,11 @@ jobs:
       WP_MULTISITE: ${{ inputs.multisite == true && 1 || 0 }}
       PACKAGE_DIRECTORY: ${{ inputs.install-core-tests == true && format('{0}/wp-content/{1}/', '/tmp/wordpress', inputs.working-directory) || inputs.working-directory }}
     steps:
+      - name: ⚠️ Deprecation Warning
+        run: |
+          echo "::warning title=Workflow Deprecated::This workflow (php-tests) is deprecated and will be removed in a future version. Please migrate to the @alleyinteractive/action-test-php action (https://github.com/alleyinteractive/action-test-php)."
+        shell: bash
+
       - name: Cancel previous runs of this workflow (pull requests only)
         if: github.event_name == 'pull_request'
         uses: styfle/cancel-workflow-action@0.12.1

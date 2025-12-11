@@ -48,6 +48,11 @@ jobs:
       SSH_KEY: ${{ secrets.REMOTE_REPO_SSH_KEY }}
 
     steps:
+      - name: ⚠️ Deprecation Warning
+        run: |
+          echo "::warning title=Workflow Deprecated::This workflow (deploy-to-remote-repository.yml) is deprecated and will be removed in a future version. Please migrate to https://github.com/alleyinteractive/action-deploy-to-remote-repository as soon as possible."
+        shell: bash
+
       - name: Checkout code
         uses: actions/checkout@v6
 

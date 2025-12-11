@@ -25,6 +25,11 @@ jobs:
     timeout-minutes: 10
     name: phpcs ${{ inputs.php }}
     steps:
+      - name: ⚠️ Deprecation Warning
+        run: |
+          echo "::warning title=Workflow Deprecated::This workflow (php-coding-standards) is deprecated and will be removed in a future version. Please migrate to the @alleyinteractive/action-test-php action (https://github.com/alleyinteractive/action-test-php)."
+        shell: bash
+
       - name: Checkout code
         uses: actions/checkout@v6
         with:

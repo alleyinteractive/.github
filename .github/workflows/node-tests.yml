@@ -75,7 +75,7 @@ jobs:
     steps:
       - name: ⚠️ Deprecation Warning
         run: |
-          echo "::warning title=Workflow Deprecated::This workflow (node-tests) is deprecated and will be removed in a future version. Please migrate to the @alleyinteractive/action-test-node action (https://github.com/alleyinteractive/action-test-node)."
+          echo "::error title=Workflow Deprecated::This workflow (node-tests) is deprecated and will be removed in a future version. Please migrate to the @alleyinteractive/action-test-node action (https://github.com/alleyinteractive/action-test-node)."
         shell: bash
 
       - name: Cancel previous runs of this workflow (pull requests only)

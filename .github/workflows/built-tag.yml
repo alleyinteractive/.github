@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: ⚠️ Deprecation Warning
         run: |
-          echo "::warning title=Workflow Deprecated::This workflow (built-tag) is deprecated and will be removed in a future version. Please migrate to the action-release workflow (https://github.com/alleyinteractive/action-release)."
+          echo "::error title=Workflow Deprecated::This workflow (built-tag) is deprecated and will be removed in a future version. Please migrate to the action-release workflow (https://github.com/alleyinteractive/action-release)."
         shell: bash
 
       - uses: actions/checkout@v6

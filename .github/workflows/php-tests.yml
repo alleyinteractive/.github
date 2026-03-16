@@ -130,7 +130,7 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
         if: inputs.action == 'install'
         with:
           working-directory: ${{ env.PACKAGE_DIRECTORY }}

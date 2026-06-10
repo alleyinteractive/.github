@@ -39,7 +39,8 @@ actions. They should not be used for new projects.
 
 ### Built Branch
 
-> ℹ️ Note: This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
+> [!IMPORTANT]
+> This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
 
 Create a `*-built` version of a branch for use in submodules.
 
@@ -77,7 +78,8 @@ jobs:
 
 ### Built Releases
 
-> ℹ️ Note: This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
+> [!IMPORTANT]
+> This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
 
 Create built releases of a project based on the WordPress plugin `Version`
 header in your main plugin file and then falling back to the `version` property in
@@ -132,9 +134,9 @@ jobs:
 
 ### Built Tag
 
-> ℹ️ Note: This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
-> Built tags with the format of `v*.*.*-built` are not compatible with Composer
-> and should be avoided.
+> [!IMPORTANT]
+> This action is deprecated in favor of the [action-release](https://github.com/alleyinteractive/action-release).
+> Built tags with the format of `v*.*.*-built` are not compatible with Composer and should be avoided.
 
 Create a `*-built` version of a tag for use in submodules.
 
@@ -217,7 +219,8 @@ jobs:
 Run automated Node tests against your repository. Assumes that your plugin will
 have the following commands available to it:
 
-> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-node](https://github.com/alleyinteractive/action-test-node).
+> [!IMPORTANT]
+> This workflow is deprecated in favor of [@alleyinteractive/action-test-node](https://github.com/alleyinteractive/action-test-node).
 
 ```sh
 npm run lint
@@ -298,7 +301,8 @@ Run a set of Composer scripts against your project. Assumes that `composer run
 <command>` will run your tests. Supports multiple commands with a multi-line
 `command` input.
 
-> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
+> [!IMPORTANT]
+> This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 > Note: This workflow does not setup MySQL for testing. Use the
 > [PHP Tests with MySQL](#php-tests-with-mysql) workflow for that.
@@ -359,7 +363,8 @@ Run PHPUnit tests against your project. Installs and configures MySQL for
 WordPress unit testing. Assumes that `composer run phpunit` will run your unit
 tests.
 
-> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
+> [!IMPORTANT]
+> This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 
@@ -480,7 +485,8 @@ jobs:
 Uses rsync and git to deploy files/folders from a local GitHub action repository
 to a remote repository.
 
-> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-deploy-to-remote-repository](https://github.com/alleyinteractive/action-deploy-to-remote-repository).
+> [!IMPORTANT]
+> This workflow is deprecated in favor of [@alleyinteractive/action-deploy-to-remote-repository](https://github.com/alleyinteractive/action-deploy-to-remote-repository).
 
 _Notes_:
 
@@ -593,7 +599,8 @@ jobs:
 Run `phpstan` tests against your project. Assumes that `composer run phpstan` will
 run your tests.
 
-> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
+> [!IMPORTANT]
+> This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 
@@ -647,7 +654,8 @@ jobs:
 Run `phpcs` tests against your project. Assumes that `composer run phpcs` will
 run your tests.
 
-> ℹ️ Note: This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
+> [!IMPORTANT]
+> This workflow is deprecated in favor of [@alleyinteractive/action-test-php](https://github.com/alleyinteractive/action-test-php).
 
 #### Inputs
 

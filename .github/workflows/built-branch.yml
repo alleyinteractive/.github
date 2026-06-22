@@ -23,7 +23,7 @@ jobs:
           echo "::warning title=Workflow Deprecated::This workflow (built-branch) is deprecated and will be removed in a future version. Please migrate to the action-release workflow (https://github.com/alleyinteractive/action-release)."
         shell: bash
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Clear previous vendor
         shell: bash

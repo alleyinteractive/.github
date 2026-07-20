@@ -44,7 +44,7 @@ jobs:
 
       - name: Setup Node
         if: steps.has-node-assets.outputs.exists == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ inputs.node }}
 

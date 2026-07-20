@@ -52,7 +52,7 @@ jobs:
           echo "::warning title=Workflow Deprecated::This workflow (built-release) is deprecated and will be removed in a future version. Please migrate to the action-release workflow (https://github.com/alleyinteractive/action-release)."
         shell: bash
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN || github.token }}
@@ -178,7 +178,7 @@ jobs:
       VERSION_NAME: '${{ needs.extract-version.outputs.package_version }}'
       VERSION_TAG: '${{ needs.extract-version.outputs.tag_name }}'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN || github.token }}
